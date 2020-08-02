@@ -91,6 +91,7 @@ fn gen_field(
         TypeKind::Int(..) |
         TypeKind::Complex(..) |
         TypeKind::Float(..) |
+        TypeKind::CxxBridge(..) |
         TypeKind::Enum(..) |
         TypeKind::TypeParam |
         TypeKind::UnresolvedTypeRef(..) |

@@ -705,6 +705,7 @@ impl CodeGenerator for Type {
             TypeKind::NullPtr |
             TypeKind::Int(..) |
             TypeKind::Float(..) |
+            TypeKind::CxxBridge(..) |
             TypeKind::Complex(..) |
             TypeKind::Array(..) |
             TypeKind::Vector(..) |
@@ -3466,6 +3467,9 @@ impl TryToRustTy for Type {
             TypeKind::ObjCInterface(..) => Ok(quote! {
                 objc::runtime::Object
             }),
+            TypeKind::CxxBridge(cxxk) => {
+                Ok(cxxbridge_kind_rust_type(ctx, cxxk))
+            }
             ref u @ TypeKind::UnresolvedTypeRef(..) => {
                 unreachable!("Should have been resolved after parsing {:?}!", u)
             }

@@ -356,6 +356,7 @@ impl Type {
             TypeKind::NullPtr |
             TypeKind::Pointer(..) |
             TypeKind::BlockPointer(..) |
+            TypeKind::CxxBridge(..) |
             TypeKind::ObjCId |
             TypeKind::ObjCSel |
             TypeKind::ObjCInterface(..) => Some(self),
@@ -511,6 +512,7 @@ impl TypeKind {
             TypeKind::ObjCInterface(..) => "ObjCInterface",
             TypeKind::ObjCId => "ObjCId",
             TypeKind::ObjCSel => "ObjCSel",
+            TypeKind::CxxBridge(..) => "CxxBridge",
         }
     }
 }
@@ -595,6 +597,7 @@ impl TemplateParameters for TypeKind {
             TypeKind::UnresolvedTypeRef(..) |
             TypeKind::TypeParam |
             TypeKind::Alias(_) |
+            TypeKind::CxxBridge(_) |
             TypeKind::ObjCId |
             TypeKind::ObjCSel |
             TypeKind::ObjCInterface(_) => vec![],
@@ -615,6 +618,12 @@ pub enum FloatKind {
     Float128,
 }
 
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub enum CxxBridgeKind {
+    /// A std::string.
+    CxxString,
+}
+
 /// The different kinds of types that we can parse.
 #[derive(Debug)]
 pub enum TypeKind {
@@ -623,6 +632,8 @@ pub enum TypeKind {
 
     /// The `nullptr_t` type.
     NullPtr,
+
+    CxxBridge(CxxBridgeKind),
 
     /// A compound type, that is, a class, struct, or union.
     Comp(CompInfo),
@@ -1270,6 +1281,7 @@ impl Trace for Type {
             TypeKind::Int(_) |
             TypeKind::Float(_) |
             TypeKind::Complex(_) |
+            TypeKind::CxxBridge(_) |
             TypeKind::ObjCId |
             TypeKind::ObjCSel => {}
         }

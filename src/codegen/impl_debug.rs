@@ -151,6 +151,7 @@ impl<'a> ImplDebug<'a> for Item {
             TypeKind::NullPtr |
             TypeKind::Int(..) |
             TypeKind::Float(..) |
+            TypeKind::CxxBridge(..) |
             TypeKind::Complex(..) |
             TypeKind::Function(..) |
             TypeKind::Enum(..) |

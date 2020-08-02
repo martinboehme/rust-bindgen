@@ -139,7 +139,7 @@ pub mod ast_ty {
     use crate::ir::context::BindgenContext;
     use crate::ir::function::FunctionSig;
     use crate::ir::layout::Layout;
-    use crate::ir::ty::FloatKind;
+    use crate::ir::ty::{FloatKind, CxxBridgeKind};
     use proc_macro2::{self, TokenStream};
     use std::str::FromStr;
 
@@ -221,6 +221,15 @@ pub mod ast_ty {
                     quote! { [u64; 2] }
                 }
             }
+        }
+    }
+
+    pub fn cxxbridge_kind_rust_type(
+        _ctx: &BindgenContext,
+        cxxk: CxxBridgeKind,
+    ) -> TokenStream {
+        match cxxk {
+            CxxString => quote! { CxxString }
         }
     }
 

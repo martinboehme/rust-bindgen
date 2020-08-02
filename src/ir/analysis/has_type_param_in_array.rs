@@ -127,6 +127,7 @@ impl<'ctx> MonotoneFramework for HasTypeParameterInArray<'ctx> {
             TypeKind::NullPtr |
             TypeKind::Int(..) |
             TypeKind::Float(..) |
+            TypeKind::CxxBridge(..) |
             TypeKind::Vector(..) |
             TypeKind::Complex(..) |
             TypeKind::Function(..) |

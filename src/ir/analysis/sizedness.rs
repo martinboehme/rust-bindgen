@@ -249,6 +249,7 @@ impl<'ctx> MonotoneFramework for SizednessAnalysis<'ctx> {
 
             TypeKind::Int(..) |
             TypeKind::Float(..) |
+            TypeKind::CxxBridge(..) |
             TypeKind::Complex(..) |
             TypeKind::Function(..) |
             TypeKind::Enum(..) |
