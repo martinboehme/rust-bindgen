@@ -541,6 +541,7 @@ fn find_effective_target(clang_args: &[String]) -> (String, bool) {
 impl BindgenContext {
     /// Construct the context for the given `options`.
     pub(crate) fn new(options: BindgenOptions) -> Self {
+
         // TODO(emilio): Use the CXTargetInfo here when available.
         //
         // see: https://reviews.llvm.org/D32389
@@ -2041,6 +2042,20 @@ If you encounter an error missing from this list, please file an issue or a PR!"
         Some(id.as_type_id_unchecked())
     }
 
+    fn build_cxx_type(&mut self) -> ItemId {
+        let ty = Type::new(Some("CxxStringProbably".into()), None, TypeKind::CxxBridge(super::ty::CxxBridgeKind::CxxString), false);
+
+        let id = self.next_item_id();
+        let item = Item::new(
+            id,
+            None,
+            None,
+            self.root_module.into(),
+            ItemKind::Type(ty),
+        );
+        id
+    }
+
     /// Get the current Clang translation unit that is being processed.
     pub fn translation_unit(&self) -> &clang::TranslationUnit {
         &self.translation_unit
@@ -2071,6 +2086,12 @@ If you encounter an error missing from this list, please file an issue or a PR!"
     /// Are we in the codegen phase?
     pub fn in_codegen_phase(&self) -> bool {
         self.in_codegen
+    }
+
+    pub fn replace_cxx_types(&mut self) {
+        // TODO figure out when to call this
+        let cxx_string = self.build_cxx_type();
+        self.replace(&["std".to_string(), "string".to_string()], cxx_string);
     }
 
     /// Mark the type with the given `name` as replaced by the type with id

@@ -1994,6 +1994,7 @@ impl Bindings {
 
         let time_phases = options.time_phases;
         let mut context = BindgenContext::new(options);
+        context.replace_cxx_types(); // TODO
 
         {
             let _t = time::Timer::new("parse").with_output(time_phases);

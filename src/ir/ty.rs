@@ -395,8 +395,7 @@ impl IsOpaque for Type {
 
     fn is_opaque(&self, ctx: &BindgenContext, item: &Item) -> bool {
         match self.kind {
-            TypeKind::Opaque |
-            TypeKind::CxxBridge(_) => true,
+            TypeKind::Opaque => true,
             TypeKind::TemplateInstantiation(ref inst) => {
                 inst.is_opaque(ctx, item)
             }
@@ -634,7 +633,6 @@ pub enum TypeKind {
     /// The `nullptr_t` type.
     NullPtr,
 
-    /// A type known to the cxx crate.
     CxxBridge(CxxBridgeKind),
 
     /// A compound type, that is, a class, struct, or union.
@@ -850,7 +848,6 @@ impl Type {
                     // Same here, with template specialisations we can safely
                     // assume this is a Comp(..)
                     } else if ty.is_fully_instantiated_template() {
-                        debug!("Making complex 1 for {}", ty.spelling());
                         debug!(
                             "Template specialization: {:?}, {:?} {:?}",
                             ty, location, canonical_ty
@@ -923,7 +920,6 @@ impl Type {
                                     Some(location),
                                     ctx,
                                 );
-                                debug!("Making complex 2 for {:?}", ty);
                                 match complex {
                                     Ok(complex) => TypeKind::Comp(complex),
                                     Err(_) => {
@@ -934,7 +930,6 @@ impl Type {
                                         );
                                         let opaque =
                                             Opaque::from_clang_ty(ty, ctx);
-                                        debug!("Made opaque {:?}", opaque);
                                         return Ok(ParseResult::New(
                                             opaque, None,
                                         ));
@@ -1168,8 +1163,6 @@ impl Type {
                             name = pretty_name;
                         }
                     }
-
-                    debug!("Making complex 3 for {}", ty.spelling());
 
                     TypeKind::Comp(complex)
                 }
