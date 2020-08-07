@@ -1903,6 +1903,7 @@ If you encounter an error missing from this list, please file an issue or a PR!"
         }
 
         debug!("Not resolved, maybe builtin?");
+
         self.build_builtin_ty(ty)
     }
 
@@ -1970,6 +1971,7 @@ If you encounter an error missing from this list, please file an issue or a PR!"
     }
 
     fn build_builtin_ty(&mut self, ty: &clang::Type) -> Option<TypeId> {
+        debug!("Resolve basic type - type is {:?}, kind is {}, spelling is {}", ty, ty.kind(), ty.spelling());
         use clang_sys::*;
         let type_kind = match ty.kind() {
             CXType_NullPtr => TypeKind::NullPtr,
@@ -2010,7 +2012,16 @@ If you encounter an error missing from this list, please file an issue or a PR!"
                     ),
                 };
                 TypeKind::Complex(float_kind)
-            }
+            },
+            CXType_Typedef => {
+                debug!("About to resolve maybe as CxxString...");
+                if ty.spelling() == "string" {
+                    debug!("Resolving as CxxString!...");
+                    TypeKind::CxxBridge(super::ty::CxxBridgeKind::CxxString)
+                } else {
+                    return None
+                }
+            },
             _ => return None,
         };
 

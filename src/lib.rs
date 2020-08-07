@@ -2005,7 +2005,10 @@ impl Bindings {
         Ok(Bindings {
             options: options,
             module: quote! {
-                #( #items )*
+                #[cxx::bridge]
+                mod ffi {
+                    #( #items )*
+                }
             },
         })
     }

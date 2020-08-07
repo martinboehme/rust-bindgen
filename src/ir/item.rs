@@ -671,7 +671,7 @@ impl Item {
     }
 
     /// Get the target item id for name generation.
-    fn name_target(&self, ctx: &BindgenContext) -> ItemId {
+    pub fn name_target(&self, ctx: &BindgenContext) -> ItemId {
         let mut targets_seen = DebugOnlyItemSet::new();
         let mut item = self;
 
@@ -1891,6 +1891,7 @@ impl ItemCanonicalPath for Item {
         &self,
         ctx: &BindgenContext,
     ) -> Vec<String> {
+        debug!("ADE: return namespace aware canonical path for {:?}", self);
         let mut path = self.canonical_path(ctx);
 
         // ASSUMPTION: (disable_name_namespacing && cxx_namespaces)
