@@ -1076,10 +1076,13 @@ If you encounter an error missing from this list, please file an issue or a PR!"
             }
 
             let path = item.path_for_whitelisting(self);
+            debug!("Checking for replacement of {:?}", &path[1..]);
             let replacement = self.replacements.get(&path[1..]);
 
             if let Some(replacement) = replacement {
                 if *replacement != id {
+                    debug!("Replacement found");
+
                     // We set this just after parsing the annotation. It's
                     // very unlikely, but this can happen.
                     if self.resolve_item_fallible(*replacement).is_some() {
@@ -2092,6 +2095,10 @@ If you encounter an error missing from this list, please file an issue or a PR!"
         // TODO figure out when to call this
         let cxx_string = self.build_cxx_type();
         self.replace(&["std".to_string(), "string".to_string()], cxx_string);
+        self.replace(&["std".to_string(), "basic_string".to_string()], cxx_string);
+        self.replace(&["string".to_string()], cxx_string);
+        self.replace(&["basic_string".to_string()], cxx_string);
+
     }
 
     /// Mark the type with the given `name` as replaced by the type with id
