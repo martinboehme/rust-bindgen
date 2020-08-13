@@ -3716,6 +3716,8 @@ impl CodeGenerator for Function {
         let tokens = quote! {
             #wasm_link_attribute
             extern #abi {
+                include!("input.h");
+
                 #(#attributes)*
                 pub fn #ident ( #( #args ),* ) #ret;
             }
