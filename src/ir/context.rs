@@ -1903,7 +1903,6 @@ If you encounter an error missing from this list, please file an issue or a PR!"
         }
 
         debug!("Not resolved, maybe builtin?");
-
         self.build_builtin_ty(ty)
     }
 
