@@ -229,7 +229,7 @@ pub mod ast_ty {
         cxxk: CxxBridgeKind,
     ) -> TokenStream {
         match cxxk {
-            CxxString => quote! { CxxString }
+            CxxBridgeKind::CxxString => quote! { CxxString }
         }
     }
 

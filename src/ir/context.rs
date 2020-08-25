@@ -2048,6 +2048,7 @@ If you encounter an error missing from this list, please file an issue or a PR!"
             self.root_module.into(),
             ItemKind::Type(ty),
         );
+        self.add_builtin_item(item);
         id
     }
 
