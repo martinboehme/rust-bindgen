@@ -1860,7 +1860,9 @@ impl CodeGenerator for CompInfo {
         if let Some(comment) = item.comment(ctx) {
             attributes.push(attributes::doc(comment));
         }
-        if packed && !is_opaque {
+        if ctx.options().cxx_bridge {
+            // No repr attributes
+        } else if packed && !is_opaque {
             let n = layout.map_or(1, |l| l.align);
             assert!(ctx.options().rust_features().repr_packed_n || n == 1);
             let packed_repr = if n == 1 {
