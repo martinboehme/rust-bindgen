@@ -503,8 +503,13 @@ impl Builder {
             output_vector.push(path.into());
         }
 
-        if self.options.cxx_bridge_mode {
-            output_vector.push("--cxx-bridge-mode");
+        if self.options.cxx_bridge {
+            output_vector.push("--cxx-bridge-mode".into());
+        }
+
+        for line in &self.options.cxx_bridge_includes {
+            output_vector.push("--cxx-bridge-include".into());
+            output_vector.push(line.clone());
         }
 
         // Add clang arguments
@@ -1437,8 +1442,14 @@ impl Builder {
     }
 
     /// Set the mode to generate `#[cxx::bridge]` compatible bindings.
-    pub fn cxx_bridge_mode(mut self, cxx_bridge_mode: bool) -> Self {
+    pub fn cxx_bridge(mut self, cxx_bridge_mode: bool) -> Self {
         self.options.cxx_bridge = cxx_bridge_mode;
+        self
+    }
+
+    /// Include headers to include in the 'extern "C"' section generated in `cxx_bridge` mode.
+    pub fn cxx_bridge_include<T: Into<String>>(mut self, arg: T) -> Self {
+        self.options.cxx_bridge_includes.push(arg.into());
         self
     }
 }
@@ -1712,6 +1723,9 @@ struct BindgenOptions {
 
     /// Generate `#[cxx::bridge]` compatible bindings
     cxx_bridge: bool,
+
+    /// Lines to include in 'extern 'C'' block
+    cxx_bridge_includes: Vec<String>,
 }
 
 /// TODO(emilio): This is sort of a lie (see the error message that results from
@@ -1841,6 +1855,7 @@ impl Default for BindgenOptions {
             array_pointers_in_arguments: false,
             wasm_import_module_name: None,
             cxx_bridge: false,
+            cxx_bridge_includes: Default::default(),
         }
     }
 }

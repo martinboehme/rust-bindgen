@@ -3713,10 +3713,15 @@ impl CodeGenerator for Function {
             });
 
         let ident = ctx.rust_ident(canonical_name);
+        let inclusions =
+            ctx.options().cxx_bridge_includes.iter().map(|x|
+            quote! {
+                include!(#x);
+            });
         let tokens = quote! {
             #wasm_link_attribute
             extern #abi {
-                include!("input.h");
+                #(#inclusions)*
 
                 #(#attributes)*
                 pub fn #ident ( #( #args ),* ) #ret;
