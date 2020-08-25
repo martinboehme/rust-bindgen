@@ -541,7 +541,6 @@ fn find_effective_target(clang_args: &[String]) -> (String, bool) {
 impl BindgenContext {
     /// Construct the context for the given `options`.
     pub(crate) fn new(options: BindgenOptions) -> Self {
-
         // TODO(emilio): Use the CXTargetInfo here when available.
         //
         // see: https://reviews.llvm.org/D32389
@@ -1076,13 +1075,10 @@ If you encounter an error missing from this list, please file an issue or a PR!"
             }
 
             let path = item.path_for_whitelisting(self);
-            debug!("Checking for replacement of {:?}", &path[1..]);
             let replacement = self.replacements.get(&path[1..]);
 
             if let Some(replacement) = replacement {
                 if *replacement != id {
-                    debug!("Replacement found");
-
                     // We set this just after parsing the annotation. It's
                     // very unlikely, but this can happen.
                     if self.resolve_item_fallible(*replacement).is_some() {
@@ -1975,7 +1971,6 @@ If you encounter an error missing from this list, please file an issue or a PR!"
     }
 
     fn build_builtin_ty(&mut self, ty: &clang::Type) -> Option<TypeId> {
-        debug!("Resolve basic type - type is {:?}, kind is {}, spelling is {}", ty, ty.kind(), ty.spelling());
         use clang_sys::*;
         let type_kind = match ty.kind() {
             CXType_NullPtr => TypeKind::NullPtr,
@@ -2018,9 +2013,7 @@ If you encounter an error missing from this list, please file an issue or a PR!"
                 TypeKind::Complex(float_kind)
             },
             CXType_Typedef => {
-                debug!("About to resolve maybe as CxxString...");
                 if ty.spelling() == "string" {
-                    debug!("Resolving as CxxString!...");
                     TypeKind::CxxBridge(super::ty::CxxBridgeKind::CxxString)
                 } else {
                     return None

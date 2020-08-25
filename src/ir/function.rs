@@ -636,18 +636,13 @@ impl Trace for FunctionSig {
     where
         T: Tracer,
     {
-        debug!("ADE: visiting function signature {:?}", self);
         tracer.visit_kind(self.return_type().into(), EdgeKind::FunctionReturn);
 
         for &(_, ty) in self.argument_types() {
-            debug!("ADE: considering arg type {:?}", ty);
             // TODO - avoid recursing through std::string
             let x = ctx.resolve_item(ty);
-            debug!("ADE: resolved to {:?}", x);
             let x = x.as_type().unwrap();
-            debug!("ADE: resolved to type {:?}", x);
             let x = x.safe_canonical_type(ctx);
-            debug!("ADE: resolved to canonical type {:?}", x);
             match x {
                 Some(ty) if ty.name() == Some("basic_string") => continue,
                 _ => {}

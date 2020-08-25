@@ -3290,7 +3290,6 @@ impl TryToRustTy for Type {
         item: &Item,
     ) -> error::Result<proc_macro2::TokenStream> {
         use self::helpers::ast_ty::*;
-        debug!("ADE: TryToRustTy for {:?}", self);
 
         match *self.kind() {
             TypeKind::Void => Ok(c_void(ctx)),
@@ -3400,9 +3399,7 @@ impl TryToRustTy for Type {
             TypeKind::Alias(..) |
             TypeKind::BlockPointer(..) => {
                 let fqn = item.namespace_aware_canonical_path(ctx).join("::");
-                debug!("ADE: assessing name {}", fqn);
                 if fqn == "string" {
-                    debug!("ADE: match!");
                     return Ok(cxxbridge_kind_rust_type(ctx, CxxBridgeKind::CxxString));
                 }
                 if self.is_block_pointer() && !ctx.options().generate_block {
@@ -3421,10 +3418,8 @@ impl TryToRustTy for Type {
                     .name()
                     .and_then(|name| utils::type_from_named(ctx, name))
                 {
-                    debug!("ADE: in the Alias section with {:?} -> {:?}", item, ty);
                     Ok(ty)
                 } else {
-                    debug!("ADE: past the Alias section with {:?}", item);
                     utils::build_path(item, ctx)
                 }
             }
@@ -3477,7 +3472,6 @@ impl TryToRustTy for Type {
                 objc::runtime::Object
             }),
             TypeKind::CxxBridge(cxxk) => {
-                debug!("ADE: here I am with {:?}", cxxk);
                 Ok(cxxbridge_kind_rust_type(ctx, cxxk))
             }
             ref u @ TypeKind::UnresolvedTypeRef(..) => {
@@ -3646,7 +3640,6 @@ impl CodeGenerator for Function {
             result.saw_function(seen_symbol_name);
         }
 
-        debug!("ADE: about to resolve signature {:?}", self.signature());
         let signature_item = ctx.resolve_item(self.signature());
         let signature = signature_item.kind().expect_type().canonical_type(ctx);
         let signature = match *signature.kind() {
@@ -3655,7 +3648,6 @@ impl CodeGenerator for Function {
         };
 
         let args = utils::fnsig_arguments(ctx, signature);
-        debug!("ADE: resolved function arguments as {:?}", args);
         let ret = utils::fnsig_return_ty(ctx, signature);
 
         let mut attributes = vec![];
@@ -3695,14 +3687,16 @@ impl CodeGenerator for Function {
             abi => abi,
         };
 
-        //let link_name = mangled_name.unwrap_or(name);
-        //if !utils::names_will_be_identical_after_mangling(
-        //    &canonical_name,
-        //    link_name,
-        //    Some(abi),
-        //) {
-        //    attributes.push(attributes::link_name(link_name));
-        //}
+        if !ctx.options().cxx_bridge {
+            let link_name = mangled_name.unwrap_or(name);
+            if !utils::names_will_be_identical_after_mangling(
+                &canonical_name,
+                link_name,
+                Some(abi),
+            ) {
+                attributes.push(attributes::link_name(link_name));
+            }
+        }
 
         // Unfortunately this can't piggyback on the `attributes` list because
         // the #[link(wasm_import_module)] needs to happen before the `extern
@@ -3965,7 +3959,6 @@ pub(crate) fn codegen(
             }
         }
 
-        // ADE important stuff here
         context.resolve_item(context.root_module()).codegen(
             context,
             &mut result,
@@ -4322,7 +4315,6 @@ mod utils {
                 let arg_item = ctx.resolve_item(ty);
                 let arg_ty = arg_item.kind().expect_type();
 
-                debug!("ADE: resolving argument with type 1 {:?}", arg_ty);
                 // From the C90 standard[1]:
                 //
                 //     A declaration of a parameter as "array of type" shall be
@@ -4357,8 +4349,6 @@ mod utils {
                     _ => arg_item.to_rust_ty_or_opaque(ctx, &()),
                 };
 
-                debug!("ADE: resolving argument with type (2) {:?}", arg_ty);
-
                 let arg_name = match *name {
                     Some(ref name) => ctx.rust_mangle(name).into_owned(),
                     None => {
@@ -4367,7 +4357,6 @@ mod utils {
                     }
                 };
 
-                debug!("ADE: resolving argument {:?}", arg_name);
                 assert!(!arg_name.is_empty());
                 let arg_name = ctx.rust_ident(arg_name);
 

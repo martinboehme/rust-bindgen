@@ -2032,14 +2032,22 @@ impl Bindings {
 
         let (items, options) = codegen::codegen(context);
 
+        let cxx_bridge_mode = options.cxx_bridge;
+        let bindings = quote! {
+            #( #items )*
+        };
         Ok(Bindings {
             options: options,
-            module: quote! {
-                #[cxx::bridge]
-                mod ffi {
-                    #( #items )*
+            module: if cxx_bridge_mode {
+                quote! {
+                    #[cxx::bridge]
+                    mod ffi {
+                        #bindings
+                    }
                 }
-            },
+            } else {
+                bindings
+            }
         })
     }
 
