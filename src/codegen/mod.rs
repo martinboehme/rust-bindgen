@@ -1859,7 +1859,9 @@ impl CodeGenerator for CompInfo {
         if let Some(comment) = item.comment(ctx) {
             attributes.push(attributes::doc(comment));
         }
-        if packed && !is_opaque {
+        if ctx.options().cxx_bridge {
+            // No repr attributes
+        } else if packed && !is_opaque {
             let n = layout.map_or(1, |l| l.align);
             assert!(ctx.options().rust_features().repr_packed_n || n == 1);
             let packed_repr = if n == 1 {
@@ -3760,13 +3762,15 @@ impl CodeGenerator for Function {
             abi => abi,
         };
 
-        let link_name = mangled_name.unwrap_or(name);
-        if !utils::names_will_be_identical_after_mangling(
-            &canonical_name,
-            link_name,
-            Some(abi),
-        ) {
-            attributes.push(attributes::link_name(link_name));
+        if !ctx.options().cxx_bridge {
+            let link_name = mangled_name.unwrap_or(name);
+            if !utils::names_will_be_identical_after_mangling(
+                &canonical_name,
+                link_name,
+                Some(abi),
+            ) {
+                attributes.push(attributes::link_name(link_name));
+            }
         }
 
         // Unfortunately this can't piggyback on the `attributes` list because
@@ -3778,9 +3782,16 @@ impl CodeGenerator for Function {
             });
 
         let ident = ctx.rust_ident(canonical_name);
+        let inclusions =
+            ctx.options().cxx_bridge_includes.iter().map(|x|
+            quote! {
+                include!(#x);
+            });
         let tokens = quote! {
             #wasm_link_attribute
             extern #abi {
+                #(#inclusions)*
+
                 #(#attributes)*
                 pub fn #ident ( #( #args ),* ) #ret;
             }

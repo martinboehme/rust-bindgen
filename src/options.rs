@@ -471,7 +471,16 @@ where
                 .long("wasm-import-module-name")
                 .value_name("name")
                 .takes_value(true)
-                .help("The name to be used in a #[link(wasm_import_module = ...)] statement")
+                .help("The name to be used in a #[link(wasm_import_module = ...)] statement"),
+            Arg::with_name("cxx-bridge-mode")
+                .long("cxx-bridge-mode")
+                .help("Generate bindings for the cxx module"),
+            Arg::with_name("cxx-bridge-include")
+                .long("xx-bridge-include")
+                .help("Add a file to be included in an 'extern \"C\"' block in cxx mode.")
+                .takes_value(true)
+                .multiple(true)
+                .number_of_values(1),
         ]) // .args()
         .get_matches_from(args);
 
@@ -815,6 +824,16 @@ where
 
     if matches.is_present("size_t-is-usize") {
         builder = builder.size_t_is_usize(true);
+    }
+
+    if matches.is_present("cxx-bridge") {
+        builder = builder.cxx_bridge(true);
+    }
+
+    if let Some(lines) = matches.values_of("cxx-bridge-include") {
+        for line in lines {
+            builder = builder.cxx_bridge_include::<String>(line.into());
+        }
     }
 
     let no_rustfmt_bindings = matches.is_present("no-rustfmt-bindings");

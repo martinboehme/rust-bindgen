@@ -518,6 +518,15 @@ impl Builder {
             output_vector.push(path.into());
         }
 
+        if self.options.cxx_bridge {
+            output_vector.push("--cxx-bridge-mode".into());
+        }
+
+        for line in &self.options.cxx_bridge_includes {
+            output_vector.push("--cxx-bridge-include".into());
+            output_vector.push(line.clone());
+        }
+
         // Add clang arguments
 
         output_vector.push("--".into());
@@ -1468,6 +1477,18 @@ impl Builder {
         self.options.wasm_import_module_name = Some(import_name.into());
         self
     }
+
+    /// Set the mode to generate `#[cxx::bridge]` compatible bindings.
+    pub fn cxx_bridge(mut self, cxx_bridge_mode: bool) -> Self {
+        self.options.cxx_bridge = cxx_bridge_mode;
+        self
+    }
+
+    /// Include headers to include in the 'extern "C"' section generated in `cxx_bridge` mode.
+    pub fn cxx_bridge_include<T: Into<String>>(mut self, arg: T) -> Self {
+        self.options.cxx_bridge_includes.push(arg.into());
+        self
+    }
 }
 
 /// Configuration options for generated bindings.
@@ -1745,6 +1766,12 @@ struct BindgenOptions {
 
     /// Wasm import module name.
     wasm_import_module_name: Option<String>,
+
+    /// Generate `#[cxx::bridge]` compatible bindings
+    cxx_bridge: bool,
+
+    /// Lines to include in 'extern 'C'' block
+    cxx_bridge_includes: Vec<String>,
 }
 
 /// TODO(emilio): This is sort of a lie (see the error message that results from
@@ -1877,6 +1904,8 @@ impl Default for BindgenOptions {
             no_hash_types: Default::default(),
             array_pointers_in_arguments: false,
             wasm_import_module_name: None,
+            cxx_bridge: false,
+            cxx_bridge_includes: Default::default(),
         }
     }
 }
@@ -2119,11 +2148,22 @@ impl Bindings {
 
         let (items, options) = codegen::codegen(context);
 
+        let cxx_bridge_mode = options.cxx_bridge;
+        let bindings = quote! {
+            #( #items )*
+        };
         Ok(Bindings {
             options,
-            module: quote! {
-                #( #items )*
-            },
+            module: if cxx_bridge_mode {
+                quote! {
+                    #[cxx::bridge]
+                    mod ffi {
+                        #bindings
+                    }
+                }
+            } else {
+                bindings
+            }
         })
     }
 
