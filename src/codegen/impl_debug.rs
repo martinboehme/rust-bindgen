@@ -21,7 +21,7 @@ pub fn gen_debug_impl(
             CompKind::Union => {
                 format_string.push_str("union");
             }
-            CompKind::Struct => {
+            CompKind::Struct | CompKind::Class => {
                 let processed_fields = fields.iter().filter_map(|f| match f {
                     &Field::DataMember(ref fd) => fd.impl_debug(ctx, ()),
                     &Field::Bitfields(ref bu) => bu.impl_debug(ctx, ()),

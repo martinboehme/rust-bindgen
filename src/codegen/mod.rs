@@ -1917,6 +1917,9 @@ impl CodeGenerator for CompInfo {
         if !derives.is_empty() {
             attributes.push(attributes::derives(&derives))
         }
+        if self.kind() == CompKind::Class {
+            attributes.push(attributes::doc("#[bindgen(class)]".to_string()));
+        }
 
         let mut tokens = if is_union && self.can_be_rust_union(ctx) {
             quote! {

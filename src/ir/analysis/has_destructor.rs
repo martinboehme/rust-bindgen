@@ -117,7 +117,7 @@ impl<'ctx> MonotoneFramework for HasDestructorAnalysis<'ctx> {
 
                 match info.kind() {
                     CompKind::Union => ConstrainResult::Same,
-                    CompKind::Struct => {
+                    CompKind::Struct | CompKind::Class => {
                         let base_or_field_destructor =
                             info.base_members().iter().any(|base| {
                                 self.have_destructor.contains(&base.ty.into())

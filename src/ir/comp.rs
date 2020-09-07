@@ -24,6 +24,8 @@ use std::mem;
 pub enum CompKind {
     /// A struct.
     Struct,
+    /// A class.
+    Class,
     /// A union.
     Union,
 }
@@ -1095,7 +1097,7 @@ impl CompInfo {
     /// kind of unions, see test/headers/template_union.hpp
     pub fn layout(&self, ctx: &BindgenContext) -> Option<Layout> {
         // We can't do better than clang here, sorry.
-        if self.kind == CompKind::Struct {
+        if self.kind == CompKind::Struct || self.kind == CompKind::Class {
             return None;
         }
 
@@ -1541,12 +1543,13 @@ impl CompInfo {
         use clang_sys::*;
         Ok(match cursor.kind() {
             CXCursor_UnionDecl => CompKind::Union,
-            CXCursor_ClassDecl | CXCursor_StructDecl => CompKind::Struct,
+            CXCursor_StructDecl => CompKind::Struct,
+            CXCursor_ClassDecl => CompKind::Class,
             CXCursor_CXXBaseSpecifier |
             CXCursor_ClassTemplatePartialSpecialization |
             CXCursor_ClassTemplate => match cursor.template_kind() {
                 CXCursor_UnionDecl => CompKind::Union,
-                _ => CompKind::Struct,
+                _ => CompKind::Class,
             },
             _ => {
                 warn!("Unknown kind for comp type: {:?}", cursor);
