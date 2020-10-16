@@ -804,6 +804,7 @@ If you encounter an error missing from this list, please file an issue or a PR!"
         if name.contains("@") ||
             name.contains("?") ||
             name.contains("$") ||
+            name.contains("-") ||
             match name {
                 "abstract" | "alignof" | "as" | "async" | "become" |
                 "box" | "break" | "const" | "continue" | "crate" | "do" |
@@ -824,6 +825,7 @@ If you encounter an error missing from this list, please file an issue or a PR!"
             s = s.replace("@", "_");
             s = s.replace("?", "_");
             s = s.replace("$", "_");
+            s = s.replace("-", "_");
             s.push_str("_");
             return Cow::Owned(s);
         }
