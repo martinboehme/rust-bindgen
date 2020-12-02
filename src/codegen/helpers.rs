@@ -71,7 +71,7 @@ pub mod attributes {
 
     pub fn original_name(name: &str) -> TokenStream {
         quote! {
-            #[bindgen(original_name = #name)]
+            #[bindgen_original_name(#name)]
         }
     }
 }
