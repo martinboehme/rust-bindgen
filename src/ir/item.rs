@@ -1358,6 +1358,7 @@ impl ClangItemParser for Item {
             let relevant_parent_id = match definition {
                 Some(definition) => {
                     if definition != cursor {
+                        eprintln!("ADE: subthing1");
                         ctx.add_semantic_parent(definition, relevant_parent_id);
                         return Ok(Item::from_ty_or_ref(
                             applicable_cursor.cur_type(),
@@ -1374,6 +1375,7 @@ impl ClangItemParser for Item {
                 None => relevant_parent_id,
             };
 
+            eprintln!("ADE: subthing2");
             match Item::from_ty(
                 &applicable_cursor.cur_type(),
                 applicable_cursor,
