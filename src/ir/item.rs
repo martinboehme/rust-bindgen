@@ -1547,20 +1547,12 @@ impl ClangItemParser for Item {
              \tlocation = {:?}",
             id, ty, location
         );
-
         if ty.kind() == clang_sys::CXType_Unexposed ||
             location.cur_type().kind() == clang_sys::CXType_Unexposed
         {
             // ADE: PROBLEM IS Item::type_param gives the wrong thing
-            if let Some(param_id) = Item::type_param(None, location, ctx) {
-                //let mut associated_type_field;
-                let associated_type_field = ty.get_associated_type_name().or_else(|| location.cur_type().get_associated_type_name());
-                if let Some(associated_type_field) = associated_type_field {
-                    eprintln!("ADE: a7, got associated type field {}", associated_type_field);
-                    return Ok(ctx.build_ty_wrapper_for_associated_type(id, param_id, None, ty));
-                }
-
-                eprintln!("ADE: b");
+            let associated_type_field_name = ty.get_associated_type_name().or_else(|| location.cur_type().get_associated_type_name());
+            if let Some(param_id) = Item::type_param(None, location, ctx, associated_type_field_name) {
                 return Ok(ctx.build_ty_wrapper(id, param_id, None, ty));
             }
         }
@@ -1681,7 +1673,7 @@ impl ClangItemParser for Item {
                         id,
                         ty.spelling()
                     );
-                    Item::type_param(Some(id), location, ctx)
+                    Item::type_param(Some(id), location, ctx, None)
                         .map(Ok)
                         .unwrap_or(Err(ParseError::Recurse))
                 } else {
@@ -1706,6 +1698,7 @@ impl ClangItemParser for Item {
         with_id: Option<ItemId>,
         location: clang::Cursor,
         ctx: &mut BindgenContext,
+        associated_type_field_name: Option<String>,
     ) -> Option<TypeId> {
         let ty = location.cur_type();
 
@@ -1713,10 +1706,12 @@ impl ClangItemParser for Item {
             "Item::type_param:\n\
              \twith_id = {:?},\n\
              \tty = {} {:?},\n\
+             \tassociated_type_field_name = {:?},\n\
              \tlocation: {:?}",
             with_id,
             ty.spelling(),
             ty,
+            associated_type_field_name,
             location
         );
 

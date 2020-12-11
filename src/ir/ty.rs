@@ -980,7 +980,7 @@ impl Type {
                                         CXCursor_TemplateTypeParameter => {
                                             eprintln!("ADE: 1c");
                                             let param = Item::type_param(
-                                                None, cur, ctx,
+                                                None, cur, ctx, None,
                                             )
                                             .expect(
                                                 "Item::type_param shouldn't \
