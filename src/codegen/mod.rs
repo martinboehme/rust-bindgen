@@ -1855,7 +1855,6 @@ impl CodeGenerator for CompInfo {
             let associated_type_field_name = param.get_associated_type_field_name();
 
             let name = param.name().unwrap();
-            eprintln!("ADE: codegen, name={}, assoc={:?}, id={:?}", name, associated_type_field_name, ty);
             let ident = ctx.rust_ident(name);
             generic_param_names.push(ident.clone());
             generic_params.push(match associated_type_field_name {
