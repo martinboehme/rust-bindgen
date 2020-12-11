@@ -1312,6 +1312,7 @@ impl CompInfo {
                     );
 
                     let name = if name.is_empty() { None } else { Some(name) };
+                    eprintln!("ADE: found field {:?}", name);
 
                     let field = RawField::new(
                         name,
@@ -1355,16 +1356,19 @@ impl CompInfo {
                     // definition, it's a valid inner type.
                     //
                     // [1]: https://github.com/rust-lang/rust-bindgen/issues/482
+                    eprintln!("ADE: found inner thingy, {:?}", cur);
                     let is_inner_struct =
                         cur.semantic_parent() == cursor || cur.is_definition();
                     if !is_inner_struct {
                         return CXChildVisit_Continue;
                     }
+                    eprintln!("ADE: found inner thingy2");
 
                     // Even if this is a definition, we may not be the semantic
                     // parent, see #1281.
                     let inner = Item::parse(cur, Some(potential_id), ctx)
                         .expect("Inner ClassDecl");
+                    eprintln!("ADE: found inner thingy3, it's {:?}", inner);
 
                     let inner = inner.expect_type_id(ctx);
 

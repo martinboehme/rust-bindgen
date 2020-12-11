@@ -524,6 +524,8 @@ impl<'ctx> MonotoneFramework for UsedTemplateParameters<'ctx> {
         trace!("constrain {:?}", id);
         trace!("  initially, used set is {:?}", used_by_this_id);
 
+        eprintln!("ADE: constraining {:?}", id);
+
         let original_len = used_by_this_id.len();
 
         let item = self.ctx.resolve_item(id);

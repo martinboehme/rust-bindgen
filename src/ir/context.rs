@@ -886,6 +886,7 @@ If you encounter an error missing from this list, please file an issue or a PR!"
 
     /// Collect all of our unresolved type references and resolve them.
     fn resolve_typerefs(&mut self) {
+        eprintln!("ADE: resolve typerefs");
         let _t = self.timer("resolve_typerefs");
 
         let typerefs = self.collect_typerefs();
@@ -893,12 +894,14 @@ If you encounter an error missing from this list, please file an issue or a PR!"
         for (id, ty, loc, parent_id) in typerefs {
             let _resolved =
                 {
+                    eprintln!("ADE: about to resolve {:?}", ty);
                     let resolved = Item::from_ty(&ty, loc, parent_id, self)
                     .unwrap_or_else(|_| {
                         warn!("Could not resolve type reference, falling back \
                                to opaque blob");
                         Item::new_opaque_type(self.next_item_id(), &ty, self)
                     });
+                    eprintln!("ADE:resolution was {:?}", resolved);
 
                     let item = self.items[id.0].as_mut().unwrap();
                     *item.kind_mut().as_type_mut().unwrap().kind_mut() =
@@ -1586,6 +1589,7 @@ If you encounter an error missing from this list, please file an issue or a PR!"
             );
             return None;
         }
+        eprintln!("ADE: instantiate template");
 
         let mut args = vec![];
         let mut found_const_arg = false;
