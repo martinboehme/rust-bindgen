@@ -231,6 +231,10 @@ struct CodegenResult<'a> {
     /// function name to the number of overloads we have already codegen'd for
     /// that name. This lets us give each overload a unique suffix.
     overload_counters: HashMap<String, u32>,
+
+    /// Used to record what traits we have generated for the names
+    /// of inner types.
+    inner_type_traits_generated: HashSet<String>,
 }
 
 impl<'a> CodegenResult<'a> {
@@ -248,6 +252,7 @@ impl<'a> CodegenResult<'a> {
             functions_seen: Default::default(),
             vars_seen: Default::default(),
             overload_counters: Default::default(),
+            inner_type_traits_generated: Default::default(),
         }
     }
 
@@ -1955,6 +1960,26 @@ impl CodeGenerator for CompInfo {
             let child_item = ctx.resolve_item(*ty);
             // assert_eq!(child_item.parent_id(), item.id());
             child_item.codegen(ctx, result, &());
+            let child_canonical_name = child_item.canonical_name(ctx);
+            let child_canonical_name = ctx.rust_ident(&child_canonical_name);
+
+            let shortname = child_item.expect_type().name().unwrap();
+            let traitname = format!("__bindgen_has_inner_type_{}", shortname);
+            let shortname = ctx.rust_ident(shortname);
+            let traitnameid = ctx.rust_ident(&traitname);
+            if !result.inner_type_traits_generated.contains(&traitname) {
+                result.inner_type_traits_generated.insert(traitname);
+                result.push(quote! {
+                    pub trait #traitnameid {
+                        type #shortname;
+                    }
+                });
+            }
+            result.push(quote! {
+                impl #generics #traitnameid for #canonical_ident #generics {
+                    type #shortname = #child_canonical_name;
+                }
+            });
         }
 
         // NOTE: Some unexposed attributes (like alignment attributes) may
