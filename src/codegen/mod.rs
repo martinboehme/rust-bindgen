@@ -1848,12 +1848,28 @@ impl CodeGenerator for CompInfo {
         }
 
         let mut generic_param_names = vec![];
+        let mut generic_params = vec![];
 
         for (idx, ty) in item.used_template_params(ctx).iter().enumerate() {
             let param = ctx.resolve_type(*ty);
+            let associated_type_field_name = param.get_associated_type_field_name();
+
             let name = param.name().unwrap();
+            eprintln!("ADE: codegen, name={}, assoc={:?}, id={:?}", name, associated_type_field_name, ty);
             let ident = ctx.rust_ident(name);
             generic_param_names.push(ident.clone());
+            generic_params.push(match associated_type_field_name {
+                Some(field_name) => {
+                    let trait_name = format!("__bindgen_has_associated_type_{}", field_name);
+                    let trait_name = ctx.rust_ident(trait_name);
+                    quote! {
+                        #ident : #trait_name
+                    }
+                }
+                None => quote! {
+                    #ident
+                }
+            });
 
             let prefix = ctx.trait_prefix();
             let field_name = ctx.rust_ident(format!("_phantom_{}", idx));
@@ -1864,10 +1880,10 @@ impl CodeGenerator for CompInfo {
             });
         }
 
-        let generics = if !generic_param_names.is_empty() {
-            let generic_param_names = generic_param_names.clone();
+        let generics = if !generic_params.is_empty() {
+            let generic_params = generic_params.clone();
             quote! {
-                < #( #generic_param_names ),* >
+                < #( #generic_params ),* >
             }
         } else {
             quote! {}
