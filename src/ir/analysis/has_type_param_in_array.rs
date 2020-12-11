@@ -133,6 +133,7 @@ impl<'ctx> MonotoneFramework for HasTypeParameterInArray<'ctx> {
             TypeKind::Enum(..) |
             TypeKind::Reference(..) |
             TypeKind::TypeParam |
+            TypeKind::TypeParamAssociatedType(_) |
             TypeKind::Opaque |
             TypeKind::Pointer(..) |
             TypeKind::UnresolvedTypeRef(..) |

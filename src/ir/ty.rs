@@ -166,7 +166,8 @@ impl Type {
             TypeKind::Pointer(..) |
             TypeKind::Int(..) |
             TypeKind::Float(..) |
-            TypeKind::TypeParam => true,
+            TypeKind::TypeParam |
+            TypeKind::TypeParamAssociatedType(_) => true,
             _ => false,
         }
     }
@@ -342,6 +343,7 @@ impl Type {
     ) -> Option<&'tr Type> {
         match self.kind {
             TypeKind::TypeParam |
+            TypeKind::TypeParamAssociatedType(..) |
             TypeKind::Array(..) |
             TypeKind::Vector(..) |
             TypeKind::Comp(..) |
@@ -426,7 +428,8 @@ impl AsTemplateParam for TypeKind {
         item: &Item,
     ) -> Option<TypeId> {
         match *self {
-            TypeKind::TypeParam => Some(item.id().expect_type_id(ctx)),
+            TypeKind::TypeParam |
+            TypeKind::TypeParamAssociatedType(_)=> Some(item.id().expect_type_id(ctx)),
             TypeKind::ResolvedTypeRef(id) => id.as_template_param(ctx, &()),
             _ => None,
         }
@@ -508,6 +511,7 @@ impl TypeKind {
             TypeKind::UnresolvedTypeRef(..) => "UnresolvedTypeRef",
             TypeKind::ResolvedTypeRef(..) => "ResolvedTypeRef",
             TypeKind::TypeParam => "TypeParam",
+            TypeKind::TypeParamAssociatedType(_) => "TypeParamAssociatedType",
             TypeKind::ObjCInterface(..) => "ObjCInterface",
             TypeKind::ObjCId => "ObjCId",
             TypeKind::ObjCSel => "ObjCSel",
@@ -594,6 +598,7 @@ impl TemplateParameters for TypeKind {
             TypeKind::Reference(_) |
             TypeKind::UnresolvedTypeRef(..) |
             TypeKind::TypeParam |
+            TypeKind::TypeParamAssociatedType(_) | // TODO ADE
             TypeKind::Alias(_) |
             TypeKind::ObjCId |
             TypeKind::ObjCSel |
@@ -697,6 +702,9 @@ pub enum TypeKind {
 
     /// A named type, that is, a template parameter.
     TypeParam,
+
+    /// A named type associated with a type param.
+    TypeParamAssociatedType(String),
 
     /// Objective C interface. Always referenced through a pointer
     ObjCInterface(ObjCInterface),
@@ -1268,6 +1276,7 @@ impl Trace for Type {
             TypeKind::Opaque |
             TypeKind::UnresolvedTypeRef(_, _, None) |
             TypeKind::TypeParam |
+            TypeKind::TypeParamAssociatedType(_) |
             TypeKind::Void |
             TypeKind::NullPtr |
             TypeKind::Int(_) |

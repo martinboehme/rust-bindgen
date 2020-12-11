@@ -2277,7 +2277,8 @@ If you encounter an error missing from this list, please file an issue or a PR!"
                                     TypeKind::Function(..) |
                                     TypeKind::ResolvedTypeRef(..) |
                                     TypeKind::Opaque |
-                                    TypeKind::TypeParam => return true,
+                                    TypeKind::TypeParam |
+                                    TypeKind::TypeParamAssociatedType(..) => return true,
                                     _ => {}
                                 };
                             }

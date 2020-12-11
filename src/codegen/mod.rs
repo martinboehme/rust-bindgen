@@ -726,7 +726,8 @@ impl CodeGenerator for Type {
             TypeKind::Function(..) |
             TypeKind::ResolvedTypeRef(..) |
             TypeKind::Opaque |
-            TypeKind::TypeParam => {
+            TypeKind::TypeParam |
+            TypeKind::TypeParamAssociatedType(..) => {
                 // These items don't need code generation, they only need to be
                 // converted to rust types in fields, arguments, and such.
                 // NOTE(emilio): If you add to this list, make sure to also add
@@ -3579,6 +3580,14 @@ impl TryToRustTy for Type {
                 let ident = ctx.rust_ident(&name);
                 Ok(quote! {
                     #ident
+                })
+            }
+            TypeKind::TypeParamAssociatedType(ref field_name) => {
+                let name = item.canonical_name(ctx);
+                let ident = ctx.rust_ident(&name);
+                let field_ident = ctx.rust_ident(&field_name);
+                Ok(quote! {
+                    #ident :: #field_ident
                 })
             }
             TypeKind::ObjCSel => Ok(quote! {

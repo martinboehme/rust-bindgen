@@ -199,6 +199,7 @@ impl<'ctx> CannotDerive<'ctx> {
             TypeKind::Float(..) |
             TypeKind::Enum(..) |
             TypeKind::TypeParam |
+            TypeKind::TypeParamAssociatedType(_) | // TODO ADE
             TypeKind::UnresolvedTypeRef(..) |
             TypeKind::Reference(..) |
             TypeKind::ObjCInterface(..) |

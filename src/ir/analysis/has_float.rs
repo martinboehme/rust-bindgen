@@ -122,6 +122,7 @@ impl<'ctx> MonotoneFramework for HasFloat<'ctx> {
             TypeKind::Enum(..) |
             TypeKind::Reference(..) |
             TypeKind::TypeParam |
+            TypeKind::TypeParamAssociatedType(..) | // TODO ADE
             TypeKind::Opaque |
             TypeKind::Pointer(..) |
             TypeKind::UnresolvedTypeRef(..) |
