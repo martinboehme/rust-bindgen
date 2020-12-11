@@ -1696,7 +1696,7 @@ impl ClangItemParser for Item {
     ) -> Option<TypeId> {
         let ty = location.cur_type();
 
-        debug!(
+        eprintln!(
             "Item::type_param:\n\
              \twith_id = {:?},\n\
              \tty = {} {:?},\n\
