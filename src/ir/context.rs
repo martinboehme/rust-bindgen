@@ -897,6 +897,7 @@ If you encounter an error missing from this list, please file an issue or a PR!"
                     eprintln!("ADE: about to resolve {:?}", ty);
                     let resolved = Item::from_ty(&ty, loc, parent_id, self)
                     .unwrap_or_else(|_| {
+                        eprintln!("ADE: failed to resolve");
                         warn!("Could not resolve type reference, falling back \
                                to opaque blob");
                         Item::new_opaque_type(self.next_item_id(), &ty, self)
