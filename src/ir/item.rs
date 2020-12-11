@@ -1788,6 +1788,7 @@ impl ClangItemParser for Item {
                 // Allow for anonymous template parameters.
                 (refd_spelling.is_empty() && ANON_TYPE_PARAM_RE.is_match(spelling.as_ref()))
         }
+        eprintln!("ADE: d1");
 
         let definition = if is_template_with_spelling(&location, &ty_spelling) {
             // Situation (1)
@@ -1834,6 +1835,7 @@ impl ClangItemParser for Item {
                 return None;
             }
         };
+        eprintln!("ADE: d2");
         assert!(is_template_with_spelling(&definition, &ty_spelling));
 
         // Named types are always parented to the root module. They are never
@@ -1842,7 +1844,7 @@ impl ClangItemParser for Item {
         // something we know will always exist.
         let parent = ctx.root_module().into();
 
-        if let Some(id) = ctx.get_type_param(&definition) {
+        if let Some(id) = ctx.get_type_param(&definition, &associated_type_field_name) {
             if let Some(with_id) = with_id {
                 return Some(ctx.build_ty_wrapper(
                     with_id,
@@ -1854,6 +1856,7 @@ impl ClangItemParser for Item {
                 return Some(id);
             }
         }
+        eprintln!("ADE: d3");
 
         // See tests/headers/const_tparam.hpp and
         // tests/headers/variadic_tname.hpp.
@@ -1865,9 +1868,13 @@ impl ClangItemParser for Item {
             None,
             None,
             parent,
-            ItemKind::Type(Type::named(name)),
+            ItemKind::Type(match associated_type_field_name {
+                Some(ref associated_type_field_name) => Type::named_associated_type(name, associated_type_field_name.clone()),
+                None => Type::named(name),
+            }),
         );
-        ctx.add_type_param(item, definition);
+        eprintln!("ADE: d4");
+        ctx.add_type_param(item, definition, associated_type_field_name);
         Some(id.as_type_id_unchecked())
     }
 }

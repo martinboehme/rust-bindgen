@@ -313,9 +313,10 @@ pub struct BindgenContext {
     /// item ids during parsing.
     types: HashMap<TypeKey, TypeId>,
 
-    /// Maps from a cursor to the item id of the named template type parameter
-    /// for that cursor.
-    type_params: HashMap<clang::Cursor, TypeId>,
+    /// Maps from a cursor to the item id of the named template type parameters
+    /// for that cursor. There may be several, if there are associated types.
+    /// The inner map stores the associated type name.
+    type_params: HashMap<clang::Cursor, HashMap<Option<String>, TypeId>>,
 
     /// A cursor to module map. Similar reason than above.
     modules: HashMap<Cursor, ModuleId>,
@@ -754,7 +755,7 @@ If you encounter an error missing from this list, please file an issue or a PR!"
     }
 
     /// Add a new named template type parameter to this context's item set.
-    pub fn add_type_param(&mut self, item: Item, definition: clang::Cursor) {
+    pub fn add_type_param(&mut self, item: Item, definition: clang::Cursor, associated_type_field_name: Option<String>) {
         debug!(
             "BindgenContext::add_type_param: item = {:?}; definition = {:?}",
             item, definition
@@ -772,29 +773,35 @@ If you encounter an error missing from this list, please file an issue or a PR!"
         self.add_item_to_module(&item);
 
         let id = item.id();
+        eprintln!("ADE: add type param for id {:?}", id);
         let old_item = mem::replace(&mut self.items[id.0], Some(item));
         assert!(
             old_item.is_none(),
             "should not have already associated an item with the given id"
         );
 
-        let old_named_ty = self
-            .type_params
-            .insert(definition, id.as_type_id_unchecked());
+        eprintln!("ADE: add named type for cursor {:?}", definition);
+        let map_by_field = self.type_params.entry(definition).or_default();
+        let old_entry = map_by_field.insert(associated_type_field_name, id.as_type_id_unchecked());
+       
         assert!(
-            old_named_ty.is_none(),
-            "should not have already associated a named type with this id"
+            old_entry.is_none(),
+            "should not have already associated this named type with this cursor"
         );
     }
 
     /// Get the named type defined at the given cursor location, if we've
     /// already added one.
-    pub fn get_type_param(&self, definition: &clang::Cursor) -> Option<TypeId> {
+    pub fn get_type_param(&self, definition: &clang::Cursor, associated_type_field_name: &Option<String>) -> Option<TypeId> {
         assert_eq!(
             definition.kind(),
             clang_sys::CXCursor_TemplateTypeParameter
         );
-        self.type_params.get(definition).cloned()
+        self.type_params.get(definition)
+            .map(|by_fields| by_fields
+            .get(associated_type_field_name))
+            .flatten()
+            .cloned()
     }
 
     // TODO: Move all this syntax crap to other part of the code.

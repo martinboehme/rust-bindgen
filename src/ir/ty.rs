@@ -118,7 +118,7 @@ impl Type {
     /// Is this type of kind `TypeKind::TypeParam`?
     pub fn is_type_param(&self) -> bool {
         match self.kind {
-            TypeKind::TypeParam => true,
+            TypeKind::TypeParam | TypeKind::TypeParamAssociatedType(_) => true,
             _ => false,
         }
     }
@@ -176,6 +176,12 @@ impl Type {
     pub fn named(name: String) -> Self {
         let name = if name.is_empty() { None } else { Some(name) };
         Self::new(name, None, TypeKind::TypeParam, false)
+    }
+
+    /// Creates a new named type, with name `name`.
+    pub fn named_associated_type(name: String, associated_type_field_name: String) -> Self {
+        let name = if name.is_empty() { None } else { Some(name) };
+        Self::new(name, None, TypeKind::TypeParamAssociatedType(associated_type_field_name), false)
     }
 
     /// Is this a floating point type?
