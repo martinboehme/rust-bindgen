@@ -389,6 +389,15 @@ impl Type {
             _ => false,
         }
     }
+
+    /// Is this of kind `TypeKind::TypeParamAssociatedType`?
+    /// If so return the field name
+    pub fn get_associated_type_field_name(&self) -> Option<&str> {
+        match &self.kind {
+            TypeKind::TypeParamAssociatedType(field) => Some(field),
+            _ => None,
+        }
+    }
 }
 
 impl IsOpaque for Type {
