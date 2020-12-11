@@ -763,6 +763,7 @@ impl CodeGenerator for Type {
                     quote! {}
                 };
 
+                eprintln!("ADE: here4");
                 tokens.append_all(quote! {
                     pub type #rust_name = #inner_rust_type ;
                 });
@@ -776,6 +777,7 @@ impl CodeGenerator for Type {
                     inner.into_resolver().through_type_refs().resolve(ctx);
                 let name = item.canonical_name(ctx);
                 let path = item.canonical_path(ctx);
+                eprintln!("ADE: gen template alias for {}, path={:?}", name, path);
 
                 {
                     let through_type_aliases = inner
@@ -805,9 +807,11 @@ impl CodeGenerator for Type {
 
                 let is_opaque = item.is_opaque(ctx, &());
                 let inner_rust_type = if is_opaque {
+                    eprintln!("ADE: opaque");
                     outer_params = vec![];
                     self.to_opaque(ctx, item)
                 } else {
+                    eprintln!("ADE: not opaque");
                     // Its possible that we have better layout information than
                     // the inner type does, so fall back to an opaque blob based
                     // on our layout if converting the inner item fails.
@@ -817,6 +821,7 @@ impl CodeGenerator for Type {
                     inner_ty.append_implicit_template_params(ctx, inner_item);
                     inner_ty
                 };
+                eprintln!("ADE: inner Rust type is {}", inner_rust_type.to_string());
 
                 {
                     // FIXME(emilio): This is a workaround to avoid generating
@@ -832,6 +837,7 @@ impl CodeGenerator for Type {
                     let inner_canon_type =
                         inner_item.expect_type().canonical_type(ctx);
                     if inner_canon_type.is_invalid_type_param() {
+                        eprintln!("ADE: invalid named type");
                         warn!(
                             "Item contained invalid named type, skipping: \
                              {:?}, {:?}",
@@ -883,6 +889,7 @@ impl CodeGenerator for Type {
                     return;
                 }
 
+                eprintln!("ADE: here5");
                 tokens.append_all(match alias_style {
                     AliasVariation::TypeAlias => quote! {
                         pub type #rust_name
@@ -939,6 +946,7 @@ impl CodeGenerator for Type {
                     });
                 }
 
+                eprintln!("ADE: here6");
                 tokens.append_all(match alias_style {
                     AliasVariation::TypeAlias => quote! {
                         = #inner_rust_type ;
@@ -3270,8 +3278,10 @@ where
     ) -> error::Result<proc_macro2::TokenStream> {
         self.try_to_rust_ty(ctx, extra).or_else(|_| {
             if let Ok(layout) = self.try_get_layout(ctx, extra) {
+                eprintln!("ADE: layout is {:?}", layout);
                 Ok(helpers::blob(ctx, layout))
             } else {
+                eprintln!("ADE: no layout for opaque blob");
                 Err(error::Error::NoLayoutForOpaqueBlob)
             }
         })
@@ -3396,6 +3406,7 @@ impl TryToRustTy for Type {
         item: &Item,
     ) -> error::Result<proc_macro2::TokenStream> {
         use self::helpers::ast_ty::*;
+        //eprintln!("ADE: TryToRustTy with {:?}", self.kind());
 
         match *self.kind() {
             TypeKind::Void => Ok(c_void(ctx)),
