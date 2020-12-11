@@ -833,6 +833,7 @@ impl Type {
                                     // etc.
                                     !canonical_ty.spelling().contains("type-parameter") =>
                 {
+                    eprintln!("ADE: 1a");
                     debug!("Looking for canonical type: {:?}", canonical_ty);
                     return Self::from_clang_ty(
                         potential_id,
@@ -843,6 +844,7 @@ impl Type {
                     );
                 }
                 CXType_Unexposed | CXType_Invalid => {
+                    eprintln!("ADE: 1b");
                     // For some reason Clang doesn't give us any hint in some
                     // situations where we should generate a function pointer (see
                     // tests/headers/func_ptr_in_struct.h), so we do a guess here
@@ -854,6 +856,7 @@ impl Type {
                     // Same here, with template specialisations we can safely
                     // assume this is a Comp(..)
                     } else if ty.is_fully_instantiated_template() {
+                        eprintln!("ADE: 1ba");
                         debug!(
                             "Template specialization: {:?}, {:?} {:?}",
                             ty, location, canonical_ty
@@ -867,9 +870,11 @@ impl Type {
                         .expect("C'mon");
                         TypeKind::Comp(complex)
                     } else {
+                        eprintln!("ADE: 1bb");
                         match location.kind() {
                             CXCursor_CXXBaseSpecifier |
                             CXCursor_ClassTemplate => {
+                                eprintln!("ADE: 1bc");
                                 if location.kind() == CXCursor_CXXBaseSpecifier
                                 {
                                     // In the case we're parsing a base specifier
@@ -944,6 +949,7 @@ impl Type {
                             }
                             CXCursor_TypeAliasTemplateDecl => {
                                 debug!("TypeAliasTemplateDecl");
+                                eprintln!("ADE: 1bd");
 
                                 // We need to manually unwind this one.
                                 let mut inner = Err(ParseError::Continue);
@@ -972,6 +978,7 @@ impl Type {
                                             ));
                                         }
                                         CXCursor_TemplateTypeParameter => {
+                                            eprintln!("ADE: 1c");
                                             let param = Item::type_param(
                                                 None, cur, ctx,
                                             )
@@ -1002,6 +1009,7 @@ impl Type {
                                 TypeKind::TemplateAlias(inner_type, args)
                             }
                             CXCursor_TemplateRef => {
+                                eprintln!("ADE: 1be");
                                 let referenced = location.referenced().unwrap();
                                 let referenced_ty = referenced.cur_type();
 
@@ -1022,6 +1030,7 @@ impl Type {
                                 );
                             }
                             CXCursor_TypeRef => {
+                                eprintln!("ADE: 1bf");
                                 let referenced = location.referenced().unwrap();
                                 let referenced_ty = referenced.cur_type();
                                 let declaration = referenced_ty.declaration();
@@ -1047,6 +1056,7 @@ impl Type {
                                 return Err(ParseError::Continue);
                             }
                             _ => {
+                                eprintln!("ADE: 1g, kind is {}", location.kind());
                                 if ty.kind() == CXType_Unexposed {
                                     warn!(
                                         "Unexposed type {:?}, recursing inside, \
@@ -1057,6 +1067,7 @@ impl Type {
                                     return Err(ParseError::Recurse);
                                 }
 
+                                eprintln!("ADE: ooh, really??");
                                 warn!("invalid type {:?}", ty);
                                 return Err(ParseError::Continue);
                             }

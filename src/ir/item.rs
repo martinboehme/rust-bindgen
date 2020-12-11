@@ -1541,7 +1541,7 @@ impl ClangItemParser for Item {
     ) -> Result<TypeId, ParseError> {
         use clang_sys::*;
 
-        debug!(
+        eprintln!(
             "Item::from_ty_with_id: {:?}\n\
              \tty = {:?},\n\
              \tlocation = {:?}",
@@ -1551,17 +1551,21 @@ impl ClangItemParser for Item {
         if ty.kind() == clang_sys::CXType_Unexposed ||
             location.cur_type().kind() == clang_sys::CXType_Unexposed
         {
-            if ty.is_associated_type() ||
-                location.cur_type().is_associated_type()
-            {
-                return Ok(Item::new_opaque_type(id, ty, ctx));
-            }
-
+            // ADE: PROBLEM IS Item::type_param gives the wrong thing
             if let Some(param_id) = Item::type_param(None, location, ctx) {
+                //let mut associated_type_field;
+                let associated_type_field = ty.get_associated_type_name().or_else(|| location.cur_type().get_associated_type_name());
+                if let Some(associated_type_field) = associated_type_field {
+                    eprintln!("ADE: a7, got associated type field {}", associated_type_field);
+                    return Ok(ctx.build_ty_wrapper_for_associated_type(id, param_id, None, ty));
+                }
+
+                eprintln!("ADE: b");
                 return Ok(ctx.build_ty_wrapper(id, param_id, None, ty));
             }
         }
 
+        eprintln!("ADE: c");
         let decl = {
             let decl = ty.declaration();
             decl.definition().unwrap_or(decl)
@@ -1577,12 +1581,14 @@ impl ClangItemParser for Item {
             }
         }
 
+        eprintln!("ADE: d");
         if let Some(ty) =
             ctx.builtin_or_resolved_ty(id, parent_id, ty, Some(location))
         {
             return Ok(ty);
         }
 
+        eprintln!("ADE: e");
         // First, check we're not recursing.
         let mut valid_decl = decl.kind() != CXCursor_NoDeclFound;
         let declaration_to_look_for = if valid_decl {
@@ -1594,6 +1600,7 @@ impl ClangItemParser for Item {
             decl
         };
 
+        eprintln!("ADE: f");
         if valid_decl {
             if let Some(partial) = ctx
                 .currently_parsed_types()
@@ -1612,13 +1619,16 @@ impl ClangItemParser for Item {
             ctx.begin_parsing(partial_ty);
         }
 
+        eprintln!("ADE: g");
         let result = Type::from_clang_ty(id, ty, location, parent_id, ctx);
         let relevant_parent_id = parent_id.unwrap_or(current_module);
         let ret = match result {
             Ok(ParseResult::AlreadyResolved(ty)) => {
+                eprintln!("ADE: 2a");
                 Ok(ty.as_type_id_unchecked())
             }
             Ok(ParseResult::New(item, declaration)) => {
+                eprintln!("ADE: 2b");
                 ctx.add_item(
                     Item::new(
                         id,
@@ -1634,6 +1644,7 @@ impl ClangItemParser for Item {
             }
             Err(ParseError::Continue) => Err(ParseError::Continue),
             Err(ParseError::Recurse) => {
+                eprintln!("ADE: 2c");
                 debug!("Item::from_ty recursing in the ast");
                 let mut result = Err(ParseError::Recurse);
 
@@ -1663,6 +1674,7 @@ impl ClangItemParser for Item {
                 //
                 // This is what happens with some template members, for example.
                 if let Err(ParseError::Recurse) = result {
+                    eprintln!("ADE: aborting on template type");
                     warn!(
                         "Unknown type, assuming named template type: \
                          id = {:?}; spelling = {}",
@@ -1678,6 +1690,7 @@ impl ClangItemParser for Item {
             }
         };
 
+        eprintln!("ADE: h");
         if valid_decl {
             let partial_ty = ctx.finish_parsing();
             assert_eq!(*partial_ty.decl(), declaration_to_look_for);
