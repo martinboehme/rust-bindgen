@@ -536,6 +536,10 @@ impl<'ctx> MonotoneFramework for UsedTemplateParameters<'ctx> {
                 trace!("    named type, trivially uses itself");
                 used_by_this_id.insert(id);
             }
+            Some(&TypeKind::TypeParamAssociatedType(_)) => {
+                trace!("    named type with associated type, trivially uses itself");
+                used_by_this_id.insert(id);
+            }
             // Template instantiations only use their template arguments if the
             // template definition uses the corresponding template parameter.
             Some(&TypeKind::TemplateInstantiation(ref inst)) => {

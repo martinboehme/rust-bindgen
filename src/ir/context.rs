@@ -1306,6 +1306,7 @@ If you encounter an error missing from this list, please file an issue or a PR!"
         let _t = self.timer("find_used_template_parameters");
         if self.options.whitelist_recursively {
             let used_params = analyze::<UsedTemplateParameters>(self);
+            eprintln!("ADE: after Monotoney stuff, used template params are {:?}", used_params);
             self.used_template_parameters = Some(used_params);
         } else {
             // If you aren't recursively whitelisting, then we can't really make
@@ -1351,12 +1352,15 @@ If you encounter an error missing from this list, please file an issue or a PR!"
             return true;
         }
 
+        eprintln!("ADE: considering whether item {:?} uses item {:?}", item, template_param);
         let template_param = template_param
             .into_resolver()
             .through_type_refs()
             .through_type_aliases()
             .resolve(self)
             .id();
+        eprintln!("ADE: considering whether item {:?} uses resolved item {:?}", item, template_param);
+        eprintln!("ADE: all our used template params are {:?}", self.used_template_parameters.as_ref().unwrap().get(&item));
 
         self.used_template_parameters
             .as_ref()

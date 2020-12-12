@@ -444,7 +444,7 @@ impl AsTemplateParam for TypeKind {
     ) -> Option<TypeId> {
         match *self {
             TypeKind::TypeParam |
-            TypeKind::TypeParamAssociatedType(_)=> Some(item.id().expect_type_id(ctx)),
+            TypeKind::TypeParamAssociatedType(_) => Some(item.id().expect_type_id(ctx)),
             TypeKind::ResolvedTypeRef(id) => id.as_template_param(ctx, &()),
             _ => None,
         }

@@ -135,11 +135,13 @@ pub trait TemplateParameters: Sized {
         Self: ItemAncestors,
     {
         let ancestors: Vec<_> = self.ancestors(ctx).collect();
-        ancestors
+        let r = ancestors
             .into_iter()
             .rev()
             .flat_map(|id| id.self_template_params(ctx).into_iter())
-            .collect()
+            .collect();
+        eprintln!("ADE: all template params are {:?}", r);
+        r
     }
 
     /// Get only the set of template parameters that this item uses. This is a
@@ -155,6 +157,7 @@ pub trait TemplateParameters: Sized {
         );
 
         let id = *self.as_ref();
+        eprintln!("ADE: considering template usage of {:?}", ctx.resolve_item(id).all_template_params(ctx));
         ctx.resolve_item(id)
             .all_template_params(ctx)
             .into_iter()

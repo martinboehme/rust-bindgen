@@ -779,7 +779,7 @@ impl CodeGenerator for Type {
                     inner.into_resolver().through_type_refs().resolve(ctx);
                 let name = item.canonical_name(ctx);
                 let path = item.canonical_path(ctx);
-                eprintln!("ADE: gen template alias for {}, path={:?}", name, path);
+                eprintln!("ADE: here4: gen template alias for {}, path={:?}", name, path);
 
                 {
                     let through_type_aliases = inner
@@ -806,6 +806,7 @@ impl CodeGenerator for Type {
                 }
 
                 let mut outer_params = item.used_template_params(ctx);
+                eprintln!("ADE: used template params are {:?}", outer_params);
 
                 let is_opaque = item.is_opaque(ctx, &());
                 let inner_rust_type = if is_opaque {
@@ -891,7 +892,7 @@ impl CodeGenerator for Type {
                     return;
                 }
 
-                eprintln!("ADE: here5");
+                eprintln!("ADE: here5 with {}", rust_name.to_string());
                 tokens.append_all(match alias_style {
                     AliasVariation::TypeAlias => quote! {
                         pub type #rust_name
@@ -918,6 +919,7 @@ impl CodeGenerator for Type {
                     }
                 });
 
+                eprintln!("ADE: outer params are {:?}", outer_params);
                 let params: Vec<_> = outer_params
                     .into_iter()
                     .filter_map(|p| p.as_template_param(ctx, &()))
@@ -941,6 +943,7 @@ impl CodeGenerator for Type {
                         )
                     })
                     .collect();
+                eprintln!("ADE: template params as Rust types are {:?}", params);
 
                 if !params.is_empty() {
                     tokens.append_all(quote! {
