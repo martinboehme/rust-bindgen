@@ -398,6 +398,7 @@ impl AppendImplicitTemplateParams for proc_macro2::TokenStream {
             TypeKind::Complex(..) |
             TypeKind::Array(..) |
             TypeKind::TypeParam |
+            TypeKind::TypeParamAssociatedType(_) |
             TypeKind::Opaque |
             TypeKind::Function(..) |
             TypeKind::Enum(..) |
