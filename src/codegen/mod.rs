@@ -2248,12 +2248,12 @@ fn append_associated_type_constraints(derivable_traits: &DerivableTraits, ts: &m
     let mut done_first = false;
     for (identifier, tokens) in &trait_bounds {
         if derivable_traits.contains(*identifier) {
-            if done_first {
-                ts.append_all(quote! { + });
+            ts.append_all(if done_first {
+                quote! { + }
             } else {
-                ts.append_all(quote! { : });
-                done_first = true;
-            }
+                quote! { : }
+            });
+            done_first = true;
             ts.append_all(tokens.clone());
         }
     }
