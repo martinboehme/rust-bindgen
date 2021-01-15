@@ -879,7 +879,7 @@ impl CompFields {
                     let resolved = ctx.resolve_type(as_ty_id.unwrap());
                     eprintln!("ADE: its type is {:?}", resolved);
                     if resolved.is_type_param() {
-                        results.push(ty.clone());
+                        results.push(as_ty_id.unwrap());
                     }
                 },
                 _ => {}
