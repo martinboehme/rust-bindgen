@@ -1139,6 +1139,7 @@ If you encounter an error missing from this list, please file an issue or a PR!"
 
         self.resolve_typerefs();
         self.compute_bitfield_units();
+        self.identify_associated_type_params();
         self.process_replacements();
 
         self.deanonymize_fields();
@@ -1169,6 +1170,31 @@ If you encounter an error missing from this list, please file an issue or a PR!"
 
         let ret = cb(&self);
         (ret, self.options)
+    }
+
+    fn identify_associated_type_params(&mut self) {
+        eprintln!("ADE: identify_associated_type_params");
+        let comp_item_ids: Vec<ItemId> = self
+            .items()
+            .filter_map(|(id, item)| {
+                if item.kind().as_type()?.is_comp() {
+                    return Some(id);
+                }
+                None
+            })
+            .collect();
+        // TODO abstract the above
+
+        for id in comp_item_ids {
+            self.with_loaned_item(id, |ctx, item| {
+                item.kind_mut()
+                    .as_type_mut()
+                    .unwrap()
+                    .as_comp_mut()
+                    .unwrap()
+                    .identify_associated_type_fields(ctx);
+            });
+        }
     }
 
     /// When the `testing_only_extra_assertions` feature is enabled, this

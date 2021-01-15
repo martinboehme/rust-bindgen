@@ -123,6 +123,13 @@ impl Type {
         }
     }
 
+    pub fn resolves_to(&self) -> Option<TypeId> {
+        match self.kind {
+            TypeKind::Reference(tid) => Some(tid),
+            _ => None,
+        }
+    }
+
     /// Is this a template instantiation type?
     pub fn is_template_instantiation(&self) -> bool {
         match self.kind {

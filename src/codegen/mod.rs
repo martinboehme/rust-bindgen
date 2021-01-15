@@ -1854,7 +1854,9 @@ impl CodeGenerator for CompInfo {
         let mut generic_param_names = vec![];
         let mut generic_params = vec![];
 
+        eprintln!("ADE: finding used template params for {:?}", item.name(ctx).get());
         for (idx, ty) in item.used_template_params(ctx).iter().enumerate() {
+            eprintln!("ADE: we have a used template param: id = {:?}", ty);
             let param = ctx.resolve_type(*ty);
             let associated_type_field_name = param.get_associated_type_field_name();
 
@@ -1882,6 +1884,7 @@ impl CodeGenerator for CompInfo {
                 > ,
             });
         }
+        eprintln!("ADE: finished iterating used template params for {:?}", item.name(ctx).get());
 
         let generics = if !generic_params.is_empty() {
             let generic_params = generic_params.clone();

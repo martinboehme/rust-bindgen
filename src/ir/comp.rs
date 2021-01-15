@@ -848,6 +848,45 @@ impl CompFields {
             }
         }
     }
+
+    fn identify_associated_type_fields(&self, ctx: &BindgenContext) -> Vec<TypeId> {
+        eprintln!("ADE: fields identify_associated_type_fields - in");
+        let mut results = Vec::new();
+        let fields = match *self {
+            CompFields::AfterComputingBitfieldUnits {
+                ref fields, ..
+            } => fields,
+            // Nothing to do here.
+            CompFields::ErrorComputingBitfieldUnits => return Vec::new(),
+            CompFields::BeforeComputingBitfieldUnits(_) => {
+                panic!("Not yet computed bitfield units.");
+            }
+        };
+        eprintln!("ADE: fields identify_associated_type_fields - past bitfield bobbins");
+        // TODO abstract away the above
+        for field in fields.iter() {
+            match *field {
+                Field::DataMember(FieldData { ref ty, ..}) => {
+                    eprintln!("ADE: considering field {:?}", ty);
+                    let field_ty = ty
+                        .into_resolver()
+                        .through_type_refs()
+                        .through_type_aliases()
+                        .resolve(ctx)
+                        .id();
+                    eprintln!("ADE: iitem ID is {:?}", field_ty);
+                    let as_ty_id = field_ty.as_type_id(ctx);
+                    let resolved = ctx.resolve_type(as_ty_id.unwrap());
+                    eprintln!("ADE: its type is {:?}", resolved);
+                    if resolved.is_type_param() {
+                        results.push(ty.clone());
+                    }
+                },
+                _ => {}
+            }
+        }
+        results
+    }
 }
 
 impl Trace for CompFields {
@@ -1627,6 +1666,13 @@ impl CompInfo {
     /// Assign for each anonymous field a generated name.
     pub fn deanonymize_fields(&mut self, ctx: &BindgenContext) {
         self.fields.deanonymize_fields(ctx, &self.methods);
+    }
+
+    /// Make a note of any fields which depend on template parameters
+    pub fn identify_associated_type_fields(&mut self, ctx: &BindgenContext) {
+        let mut results = self.fields.identify_associated_type_fields(ctx);
+        eprintln!("ADE: got {:?} types while identifiying associated type fields", results);
+        self.template_params.append(&mut results);
     }
 
     /// Returns whether the current union can be represented as a Rust `union`

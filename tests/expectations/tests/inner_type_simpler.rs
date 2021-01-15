@@ -49,6 +49,7 @@ fn bindgen_test_layout_InnerType() {
 pub struct Container<ContainedType: __bindgen_has_inner_type_related_type> {
     pub contents_:
         <ContainedType as __bindgen_has_inner_type_related_type>::related_type,
-    pub _phantom_0: ::std::marker::PhantomData<::std::cell::UnsafeCell<ContainedType>>,
+    pub _phantom_0:
+        ::std::marker::PhantomData<::std::cell::UnsafeCell<ContainedType>>,
 }
 pub type Concrete = Container<InnerType>;

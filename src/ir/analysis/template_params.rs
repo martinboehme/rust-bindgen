@@ -194,6 +194,7 @@ impl<'ctx> UsedTemplateParameters<'ctx> {
             // that every template parameter always used.
             EdgeKind::TemplateDeclaration |
             EdgeKind::TemplateParameterDefinition => false,
+            // TODO ADE - giving true in the above line helps a lot
 
             // Since we have to be careful about which edges we consider for
             // this analysis to be correct, we ignore generic edges. We also

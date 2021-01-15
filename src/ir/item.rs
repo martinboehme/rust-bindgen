@@ -1552,9 +1552,12 @@ impl ClangItemParser for Item {
         {
             // ADE: PROBLEM IS Item::type_param gives the wrong thing
             let associated_type_field_name = ty.get_associated_type_name().or_else(|| location.cur_type().get_associated_type_name());
+            eprintln!("ADE: about to ask Item::type_param for {:?}", associated_type_field_name);
             if let Some(param_id) = Item::type_param(None, location, ctx, associated_type_field_name) {
+                eprintln!("ADE: it replied with {:?}", param_id);
                 return Ok(ctx.build_ty_wrapper(id, param_id, None, ty));
             }
+            eprintln!("ADE: cupboard was bare");
         }
 
         eprintln!("ADE: c");
@@ -1791,9 +1794,11 @@ impl ClangItemParser for Item {
         eprintln!("ADE: d1");
 
         let definition = if is_template_with_spelling(&location, &ty_spelling) {
+            eprintln!("ADE:  d1-sit1");
             // Situation (1)
             location
         } else if location.kind() == clang_sys::CXCursor_TypeRef {
+            eprintln!("ADE:  d1-sit2");
             // Situation (2)
             match location.referenced() {
                 Some(refd)
@@ -1805,6 +1810,7 @@ impl ClangItemParser for Item {
             }
         } else {
             // Situation (3)
+            eprintln!("ADE:  d1-sit3");
             let mut definition = None;
 
             location.visit(|child| {
