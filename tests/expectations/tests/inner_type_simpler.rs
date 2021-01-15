@@ -32,7 +32,9 @@ fn bindgen_test_layout_InnerType() {
         concat!("Alignment of ", stringify!(InnerType))
     );
     assert_eq!(
-        unsafe { &(*(::std::ptr::null::<InnerType>())).foo as *const _ as usize },
+        unsafe {
+            &(*(::std::ptr::null::<InnerType>())).foo as *const _ as usize
+        },
         0usize,
         concat!(
             "Offset of field: ",
@@ -47,6 +49,6 @@ fn bindgen_test_layout_InnerType() {
 pub struct Container<ContainedType: __bindgen_has_inner_type_related_type> {
     pub contents_:
         <ContainedType as __bindgen_has_inner_type_related_type>::related_type,
-    phantom_: std::marker::PhantomData<ContainedType>,
+    pub _phantom_0: ::std::marker::PhantomData<::std::cell::UnsafeCell<ContainedType>>,
 }
 pub type Concrete = Container<InnerType>;
