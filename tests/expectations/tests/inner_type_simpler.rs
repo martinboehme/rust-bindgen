@@ -14,7 +14,7 @@ pub struct InnerType {
 }
 pub type InnerType_related_type = ::std::os::raw::c_int;
 pub trait __bindgen_has_inner_type_related_type {
-    type related_type: std::fmt::Debug + Default + Copy + Clone;
+    type related_type: std::fmt::Debug + Copy + Clone + Default;
 }
 impl __bindgen_has_inner_type_related_type for InnerType {
     type related_type = InnerType_related_type;

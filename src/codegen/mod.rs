@@ -1997,9 +1997,11 @@ impl CodeGenerator for CompInfo {
             let traitnameid = ctx.rust_ident(&traitname);
             if !result.inner_type_traits_generated.contains(&traitname) {
                 result.inner_type_traits_generated.insert(traitname);
+                let mut type_definition = quote! { #shortname };
+                append_associated_type_constraints(&derivable_traits, &mut type_definition);
                 result.push(quote! {
                     pub trait #traitnameid {
-                        type #shortname;
+                        type #type_definition;
                     }
                 });
             }
@@ -2231,6 +2233,28 @@ impl CodeGenerator for CompInfo {
                     #( #methods )*
                 }
             });
+        }
+    }
+}
+
+fn append_associated_type_constraints(derivable_traits: &DerivableTraits, ts: &mut proc_macro2::TokenStream) {
+    let trait_bounds = [
+        (DerivableTraits::DEBUG, quote! { std::fmt::Debug }),
+        (DerivableTraits::COPY, quote! { Copy }),
+        (DerivableTraits::CLONE, quote! { Clone }),
+        (DerivableTraits::DEFAULT, quote! { Default }),
+        // TODO - do the rest
+    ];
+    let mut done_first = false;
+    for (identifier, tokens) in &trait_bounds {
+        if derivable_traits.contains(*identifier) {
+            if done_first {
+                ts.append_all(quote! { + });
+            } else {
+                ts.append_all(quote! { : });
+                done_first = true;
+            }
+            ts.append_all(tokens.clone());
         }
     }
 }
