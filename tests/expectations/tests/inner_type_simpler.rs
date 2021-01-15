@@ -32,9 +32,7 @@ fn bindgen_test_layout_InnerType() {
         concat!("Alignment of ", stringify!(InnerType))
     );
     assert_eq!(
-        unsafe {
-            &(*(::std::ptr::null::<InnerType>())).foo as *const _ as usize
-        },
+        unsafe { &(*(::std::ptr::null::<InnerType>())).foo as *const _ as usize },
         0usize,
         concat!(
             "Offset of field: ",
