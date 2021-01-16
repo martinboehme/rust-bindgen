@@ -1159,6 +1159,7 @@ impl Type {
                     TypeKind::Function(signature)
                 }
                 CXType_Typedef => {
+                    eprintln!("ADE: 1xx");
                     let inner = cursor.typedef_type().expect("Not valid Type?");
                     let inner =
                         Item::from_ty_or_ref(inner, location, None, ctx);
