@@ -1865,7 +1865,7 @@ impl CodeGenerator for CompInfo {
             generic_param_names.push(ident.clone());
             generic_params.push(match associated_type_field_name {
                 Some(field_name) => {
-                    let trait_name = format!("__bindgen_has_associated_type_{}", field_name);
+                    let trait_name = format!("__bindgen_has_inner_type_{}", field_name);
                     let trait_name = ctx.rust_ident(trait_name);
                     quote! {
                         #ident : #trait_name
