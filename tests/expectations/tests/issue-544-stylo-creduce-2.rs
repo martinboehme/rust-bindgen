@@ -6,11 +6,13 @@
 )]
 
 #[repr(C)]
+#[derive(Debug, Copy, Clone)]
 pub struct Foo {
     pub member: Foo_SecondAlias,
 }
-pub type Foo_FirstAlias = [u8; 0usize];
-pub type Foo_SecondAlias = [u8; 0usize];
+pub type Foo_FirstAlias<T> =
+    <T as __bindgen_has_inner_type_Associated>::Associated;
+pub type Foo_SecondAlias = Foo;
 impl Default for Foo {
     fn default() -> Self {
         unsafe { ::std::mem::zeroed() }

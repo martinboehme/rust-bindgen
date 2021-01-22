@@ -21,7 +21,8 @@ pub struct nsTHashtable {
 pub struct nsBaseHashtable {
     pub _address: u8,
 }
-pub type nsBaseHashtable_KeyType = [u8; 0usize];
+pub type nsBaseHashtable_KeyType<KeyClass> =
+    <KeyClass as __bindgen_has_inner_type_KeyType>::KeyType;
 pub type nsBaseHashtable_EntryType = nsBaseHashtableET;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]

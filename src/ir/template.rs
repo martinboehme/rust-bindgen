@@ -110,6 +110,11 @@ pub trait TemplateParameters: Sized {
     /// instantiating them.
     fn self_template_params(&self, ctx: &BindgenContext) -> Vec<TypeId>;
 
+    fn self_associated_type_template_params(
+        &self,
+        _ctx: &BindgenContext,
+    ) -> Vec<TypeId>;
+
     /// Get the number of free template parameters this template declaration
     /// has.
     fn num_self_template_params(&self, ctx: &BindgenContext) -> usize {
