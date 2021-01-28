@@ -110,6 +110,8 @@ pub trait TemplateParameters: Sized {
     /// instantiating them.
     fn self_template_params(&self, ctx: &BindgenContext) -> Vec<TypeId>;
 
+    /// Get the set of `ItemId`s for dependent qualified types; that is,
+    /// any types which depend upon how this template parameter may be resolved.
     fn self_associated_type_template_params(
         &self,
         _ctx: &BindgenContext,
