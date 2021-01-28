@@ -1217,13 +1217,13 @@ where
         ctx.resolve_item_fallible(*self)
             .map_or(vec![], |item| item.self_template_params(ctx))
     }
-    fn self_associated_type_template_params(
+
+    fn used_dependent_qualified_types(
         &self,
         ctx: &BindgenContext,
     ) -> Vec<TypeId> {
-        ctx.resolve_item_fallible(*self).map_or(vec![], |item| {
-            item.self_associated_type_template_params(ctx)
-        })
+        ctx.resolve_item_fallible(*self)
+            .map_or(vec![], |item| item.used_dependent_qualified_types(ctx))
     }
 }
 
@@ -1232,11 +1232,11 @@ impl TemplateParameters for Item {
         self.kind.self_template_params(ctx)
     }
 
-    fn self_associated_type_template_params(
+    fn used_dependent_qualified_types(
         &self,
         ctx: &BindgenContext,
     ) -> Vec<TypeId> {
-        self.kind.self_associated_type_template_params(ctx)
+        self.kind.used_dependent_qualified_types(ctx)
     }
 }
 
@@ -1253,14 +1253,12 @@ impl TemplateParameters for ItemKind {
         }
     }
 
-    fn self_associated_type_template_params(
+    fn used_dependent_qualified_types(
         &self,
         ctx: &BindgenContext,
     ) -> Vec<TypeId> {
         match *self {
-            ItemKind::Type(ref ty) => {
-                ty.self_associated_type_template_params(ctx)
-            }
+            ItemKind::Type(ref ty) => ty.used_dependent_qualified_types(ctx),
             ItemKind::Function(_) | ItemKind::Module(_) | ItemKind::Var(_) => {
                 vec![]
             }

@@ -1826,7 +1826,7 @@ impl TemplateParameters for CompInfo {
         self.template_params.clone()
     }
 
-    fn self_associated_type_template_params(
+    fn used_dependent_qualified_types(
         &self,
         _ctx: &BindgenContext,
     ) -> Vec<TypeId> {

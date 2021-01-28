@@ -612,11 +612,11 @@ impl TemplateParameters for Type {
         self.kind.self_template_params(ctx)
     }
 
-    fn self_associated_type_template_params(
+    fn used_dependent_qualified_types(
         &self,
         ctx: &BindgenContext,
     ) -> Vec<TypeId> {
-        self.kind.self_associated_type_template_params(ctx)
+        self.kind.used_dependent_qualified_types(ctx)
     }
 }
 
@@ -653,16 +653,16 @@ impl TemplateParameters for TypeKind {
         }
     }
 
-    fn self_associated_type_template_params(
+    fn used_dependent_qualified_types(
         &self,
         ctx: &BindgenContext,
     ) -> Vec<TypeId> {
         match *self {
             TypeKind::ResolvedTypeRef(id) => {
-                ctx.resolve_type(id).self_template_params(ctx)
+                ctx.resolve_type(id).used_dependent_qualified_types(ctx)
             }
             TypeKind::Comp(ref comp) => {
-                comp.self_associated_type_template_params(ctx)
+                comp.used_dependent_qualified_types(ctx)
             }
             _ => vec![],
         }

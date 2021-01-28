@@ -1845,8 +1845,8 @@ impl CodeGenerator for CompInfo {
         let mut generic_params = vec![];
 
         let used_dependent_qualified_types =
-            item.self_associated_type_template_params(ctx);
-        let mut depedendent_qualified_types_by_param: HashMap<
+            item.used_dependent_qualified_types(ctx);
+        let mut dependent_qualified_types_by_param: HashMap<
             crate::ir::context::TypeId,
             Vec<&String>,
         > = HashMap::default();
@@ -1857,7 +1857,7 @@ impl CodeGenerator for CompInfo {
                     tp_id,
                     associated_type_name,
                 ) => {
-                    depedendent_qualified_types_by_param
+                    dependent_qualified_types_by_param
                         .entry(*tp_id)
                         .or_default()
                         .push(associated_type_name);
@@ -1872,9 +1872,7 @@ impl CodeGenerator for CompInfo {
         for (idx, ty) in item.used_template_params(ctx).iter().enumerate() {
             let param = ctx.resolve_type(*ty);
             let dependent_qualified_type_field_names =
-                depedendent_qualified_types_by_param
-                    .get(ty)
-                    .unwrap_or(&empty);
+                dependent_qualified_types_by_param.get(ty).unwrap_or(&empty);
 
             let name = param.name().unwrap();
             let ident = ctx.rust_ident(name);
