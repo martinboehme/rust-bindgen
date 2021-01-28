@@ -74,6 +74,18 @@ pub mod attributes {
             #[bindgen::original_name(#name)]
         }
     }
+
+    pub fn ret_type_reference() -> TokenStream {
+        quote! {
+            #[bindgen::ret_type_reference]
+        }
+    }
+
+    pub fn arg_type_reference(arg_name: &Ident) -> TokenStream {
+        quote! {
+            #[bindgen::arg_type_reference(#arg_name)]
+        }
+    }
 }
 
 /// Generates a proper type for a field or type with a given `Layout`, that is,
