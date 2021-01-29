@@ -18,3 +18,6 @@ impl Default for Foo {
         unsafe { ::std::mem::zeroed() }
     }
 }
+pub trait __bindgen_has_inner_type_Associated {
+    type Associated: std::fmt::Debug + Default + Copy + Clone;
+}

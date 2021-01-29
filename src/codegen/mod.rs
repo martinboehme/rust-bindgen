@@ -728,13 +728,32 @@ impl CodeGenerator for Type {
             TypeKind::Function(..) |
             TypeKind::ResolvedTypeRef(..) |
             TypeKind::Opaque |
-            TypeKind::TypeParam |
-            TypeKind::DependentQualifiedType(..) => {
+            TypeKind::TypeParam => {
                 // These items don't need code generation, they only need to be
                 // converted to rust types in fields, arguments, and such.
                 // NOTE(emilio): If you add to this list, make sure to also add
                 // it to BindgenContext::compute_whitelisted_and_codegen_items.
                 return;
+            }
+            TypeKind::DependentQualifiedType(_, ref field_name) => {
+                let shortname = ctx.rust_ident(&field_name);
+                let traitname = ctx.inner_type_trait_ident(field_name);
+                if result.inner_type_traits_generated.insert(traitname.clone())
+                {
+                    let mut type_definition = quote! { #shortname };
+                    // Buglet here.
+                    let derivable_traits = derives_of_item(item, ctx);
+                    append_associated_type_constraints(
+                        ctx,
+                        &derivable_traits,
+                        &mut type_definition,
+                    );
+                    result.push(quote! {
+                        pub trait #traitname {
+                            type #type_definition;
+                        }
+                    });
+                }
             }
             TypeKind::TemplateInstantiation(ref inst) => {
                 inst.codegen(ctx, result, item)
@@ -2021,20 +2040,6 @@ impl CodeGenerator for CompInfo {
 
                 let traitname = ctx.inner_type_trait_ident(&shortname);
                 let shortname = ctx.rust_ident(shortname);
-                if result.inner_type_traits_generated.insert(traitname.clone())
-                {
-                    let mut type_definition = quote! { #shortname };
-                    append_associated_type_constraints(
-                        ctx,
-                        &derivable_traits,
-                        &mut type_definition,
-                    );
-                    result.push(quote! {
-                        pub trait #traitname {
-                            type #type_definition;
-                        }
-                    });
-                }
                 let mut template_params = proc_macro2::TokenStream::new();
                 template_params
                     .append_implicit_template_params(ctx, child_item);

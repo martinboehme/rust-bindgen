@@ -51,3 +51,6 @@ impl Default for nsBaseHashtable {
         unsafe { ::std::mem::zeroed() }
     }
 }
+pub trait __bindgen_has_inner_type_KeyType {
+    type KeyType: std::fmt::Debug + Default + Copy + Clone;
+}

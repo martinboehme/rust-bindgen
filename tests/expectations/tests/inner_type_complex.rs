@@ -12,9 +12,6 @@ pub struct InnerType {
     pub foo2: ::std::os::raw::c_int,
 }
 pub type InnerType_related_type = ::std::os::raw::c_int;
-pub trait __bindgen_has_inner_type_related_type {
-    type related_type: std::fmt::Debug + Default + Copy + Clone;
-}
 impl __bindgen_has_inner_type_related_type for InnerType {
     type related_type = InnerType_related_type;
 }
@@ -95,6 +92,9 @@ fn bindgen_test_layout_LaterContainingType() {
             stringify!(outer_contents)
         )
     );
+}
+pub trait __bindgen_has_inner_type_related_type {
+    type related_type: std::fmt::Debug + Default + Copy + Clone;
 }
 #[test]
 fn __bindgen_test_layout_Container_open0_InnerType_close0_instantiation() {

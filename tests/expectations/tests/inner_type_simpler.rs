@@ -11,9 +11,6 @@ pub struct InnerType {
     pub foo: ::std::os::raw::c_long,
 }
 pub type InnerType_related_type = ::std::os::raw::c_int;
-pub trait __bindgen_has_inner_type_related_type {
-    type related_type: std::fmt::Debug + Default + Copy + Clone;
-}
 impl __bindgen_has_inner_type_related_type for InnerType {
     type related_type = InnerType_related_type;
 }
@@ -51,3 +48,6 @@ pub struct Container<ContainedType: __bindgen_has_inner_type_related_type> {
         ::std::marker::PhantomData<::std::cell::UnsafeCell<ContainedType>>,
 }
 pub type Concrete = Container<InnerType>;
+pub trait __bindgen_has_inner_type_related_type {
+    type related_type: std::fmt::Debug + Default + Copy + Clone;
+}
