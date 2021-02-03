@@ -134,12 +134,60 @@ impl Type {
     /// Return the "field" name if this is a dependent qualified type.
     ///
     /// Not really a field.
-    pub fn get_dependent_qualified_type_field_name(&self) -> Option<String> {
+    pub fn get_dependent_qualified_type_field_names(
+        &self,
+        ctx: &BindgenContext,
+        tid: TypeId,
+        do_not_recurse_into: TypeId,
+    ) -> Vec<(TypeId, String)> {
         match &self.kind {
             TypeKind::DependentQualifiedType(_, field_name) => {
-                Some(field_name.clone())
+                vec![(tid, field_name.clone())]
             }
-            _ => None,
+            TypeKind::TemplateInstantiation(ta) => ta
+                .template_arguments()
+                .iter()
+                .chain(std::iter::once(&ta.template_definition()))
+                .filter(|tid| *tid != &do_not_recurse_into)
+                .map(|tid| {
+                    let item = tid
+                        .into_resolver()
+                        .through_type_refs()
+                        .through_type_aliases()
+                        .resolve(ctx);
+                    let tid = item.id().expect_type_id(ctx);
+                    item.expect_type()
+                        .get_dependent_qualified_type_field_names(
+                            ctx,
+                            tid,
+                            do_not_recurse_into,
+                        )
+                        .into_iter()
+                })
+                .flatten()
+                .collect(),
+            TypeKind::TemplateAlias(inner_type, params) => params
+                .iter()
+                .chain(std::iter::once(inner_type))
+                .filter(|tid| *tid != &do_not_recurse_into)
+                .map(|tid| {
+                    let item = tid
+                        .into_resolver()
+                        .through_type_refs()
+                        .through_type_aliases()
+                        .resolve(ctx);
+                    let tid = item.id().expect_type_id(ctx);
+                    item.expect_type()
+                        .get_dependent_qualified_type_field_names(
+                            ctx,
+                            tid,
+                            do_not_recurse_into,
+                        )
+                        .into_iter()
+                })
+                .flatten()
+                .collect(),
+            _ => vec![],
         }
     }
 

@@ -220,7 +220,7 @@ impl Trace for Field {
         match *self {
             Field::DataMember(ref data) => {
                 tracer.visit_kind(data.ty.into(), EdgeKind::Field);
-                if let Some(type_param) = data.depended_type_param {
+                for type_param in &data.depended_type_params {
                     tracer.visit_kind(
                         type_param.into(),
                         EdgeKind::ContainedDependentQualifiedType,
@@ -460,7 +460,7 @@ impl RawField {
             bitfield_width,
             mutable,
             offset,
-            depended_type_param: None,
+            depended_type_params: Vec::new(),
         })
     }
 }
@@ -866,6 +866,7 @@ impl CompFields {
     fn identify_associated_type_fields(
         &mut self,
         ctx: &BindgenContext,
+        do_not_recurse_into: TypeId,
     ) -> (Vec<TypeId>, Vec<String>) {
         let mut no_fields = vec![];
         let mut type_results = vec![];
@@ -881,14 +882,25 @@ impl CompFields {
                         .resolve(ctx)
                         .id();
                     let as_ty_id = field_ty.as_type_id(ctx);
-                    let resolved = ctx.resolve_type(as_ty_id.unwrap());
-                    if let Some(field_name) =
-                        resolved.get_dependent_qualified_type_field_name()
-                    {
-                        field_data.depended_type_param =
-                            Some(as_ty_id.unwrap());
-                        type_results.push(as_ty_id.unwrap());
-                        name_results.push(field_name);
+                    let tid = as_ty_id.unwrap();
+                    let resolved = ctx.resolve_type(tid);
+                    // Current problem
+                    // When running ./tests/test-one.sh issue-544-stylo-creduce-2
+                    // the following line should return Some for item id 12
+                    // but returns None (as far as I can see) so we never
+                    // make a EdgeKind::ContainedDependentQualifiedType
+                    let depended_qualified_type_fields = resolved
+                        .get_dependent_qualified_type_field_names(
+                            ctx,
+                            tid,
+                            do_not_recurse_into,
+                        );
+                    if !depended_qualified_type_fields.is_empty() {
+                        let (tids, mut names): (Vec<_>, Vec<_>) =
+                            depended_qualified_type_fields.into_iter().unzip();
+                        field_data.depended_type_params = tids;
+                        type_results.extend(&field_data.depended_type_params);
+                        name_results.append(&mut names);
                     }
                 }
                 _ => {}
@@ -945,9 +957,9 @@ pub struct FieldData {
     /// The offset of the field (in bits)
     offset: Option<usize>,
 
-    /// If this field depends on a type parameter of the
-    /// type, remember which type parameter.
-    depended_type_param: Option<TypeId>,
+    /// If this field depends on type parameters of the
+    /// type, remember which type parameters.
+    depended_type_params: Vec<TypeId>,
 }
 
 impl FieldMethods for FieldData {
@@ -1685,9 +1697,11 @@ impl CompInfo {
     pub fn identify_associated_type_fields(
         &mut self,
         ctx: &BindgenContext,
+        do_not_recurse_into: TypeId,
     ) -> Vec<String> {
-        let (mut typeids, fieldnames) =
-            self.fields.identify_associated_type_fields(ctx);
+        let (mut typeids, fieldnames) = self
+            .fields
+            .identify_associated_type_fields(ctx, do_not_recurse_into);
         self.dependent_qualified_type_params.append(&mut typeids);
         fieldnames
     }

@@ -775,7 +775,7 @@ If you encounter an error missing from this list, please file an issue or a PR!"
         );
 
         assert!(
-            item.expect_type().is_type_param() || item.expect_type().get_dependent_qualified_type_field_name().is_some(),
+            item.expect_type().is_type_param() || item.expect_type().is_dependent_qualified_type(),
             "Should directly be a named type, not a resolved reference or anything"
         );
         assert_eq!(
@@ -1193,6 +1193,7 @@ If you encounter an error missing from this list, please file an issue or a PR!"
     fn identify_associated_type_params(&mut self) {
         let mut used_inner_type_names = HashSet::default();
         for id in self.get_comp_item_ids() {
+            let tid = id.expect_type_id(self);
             self.with_loaned_item(id, |ctx, item| {
                 let fieldnames = item
                     .kind_mut()
@@ -1200,7 +1201,7 @@ If you encounter an error missing from this list, please file an issue or a PR!"
                     .unwrap()
                     .as_comp_mut()
                     .unwrap()
-                    .identify_associated_type_fields(ctx);
+                    .identify_associated_type_fields(ctx, tid);
                 used_inner_type_names.extend(fieldnames.into_iter());
             });
         }

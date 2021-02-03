@@ -1895,11 +1895,10 @@ impl CodeGenerator for CompInfo {
 
             let name = param.name().unwrap();
             let ident = ctx.rust_ident(name);
-            let mut this_generic = proc_macro2::TokenStream::new();
             generic_param_names.push(ident.clone());
-            this_generic.extend(quote! {
+            let mut this_generic = quote! {
                 #ident
-            });
+            };
             for (count, field_name) in
                 dependent_qualified_type_field_names.into_iter().enumerate()
             {
