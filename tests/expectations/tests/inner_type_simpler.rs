@@ -41,7 +41,10 @@ fn bindgen_test_layout_InnerType() {
 }
 #[repr(C)]
 #[derive(Debug, Default, Copy, Clone)]
-pub struct Container<ContainedType: __bindgen_has_inner_type_related_type> {
+pub struct Container<ContainedType>
+where
+    ContainedType: __bindgen_has_inner_type_related_type,
+{
     pub contents_:
         <ContainedType as __bindgen_has_inner_type_related_type>::related_type,
     pub _phantom_0:

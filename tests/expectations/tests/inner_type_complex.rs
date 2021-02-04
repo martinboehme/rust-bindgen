@@ -54,7 +54,10 @@ fn bindgen_test_layout_InnerType() {
 }
 #[repr(C)]
 #[derive(Debug, Default, Copy, Clone)]
-pub struct Container<ContainedType: __bindgen_has_inner_type_related_type> {
+pub struct Container<ContainedType>
+where
+    ContainedType: __bindgen_has_inner_type_related_type,
+{
     pub contents_: Container_content_ty<ContainedType>,
     pub _phantom_0:
         ::std::marker::PhantomData<::std::cell::UnsafeCell<ContainedType>>,

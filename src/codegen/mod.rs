@@ -1861,7 +1861,6 @@ impl CodeGenerator for CompInfo {
         }
 
         let mut generic_param_names = vec![];
-        let mut generic_params = vec![];
 
         let used_dependent_qualified_types =
             item.used_dependent_qualified_types(ctx);
@@ -1887,32 +1886,25 @@ impl CodeGenerator for CompInfo {
             }
         }
 
-        let empty = vec![];
+        let mut where_constraints: std::collections::HashMap<
+            Ident,
+            Vec<Ident>,
+        > = std::collections::HashMap::new();
         for (idx, ty) in item.used_template_params(ctx).iter().enumerate() {
             let param = ctx.resolve_type(*ty);
-            let dependent_qualified_type_field_names =
-                dependent_qualified_types_by_param.get(ty).unwrap_or(&empty);
-
             let name = param.name().unwrap();
             let ident = ctx.rust_ident(name);
-            generic_param_names.push(ident.clone());
-            let mut this_generic = quote! {
-                #ident
-            };
-            for (count, field_name) in
-                dependent_qualified_type_field_names.into_iter().enumerate()
+            if let Some(dependent_qualified_type_field_names) =
+                dependent_qualified_types_by_param.get(ty)
             {
-                let trait_name = ctx.inner_type_trait_ident(field_name);
-                this_generic.extend(if count == 0 {
-                    quote! {
-                        : #trait_name
-                    }
-                } else {
-                    quote! {
-                        + #trait_name
-                    }
-                });
+                where_constraints.entry(ident.clone()).or_default().extend(
+                    dependent_qualified_type_field_names.into_iter().map(
+                        |field_name| ctx.inner_type_trait_ident(field_name),
+                    ),
+                );
             }
+
+            generic_param_names.push(ident.clone());
 
             let prefix = ctx.trait_prefix();
             let field_name = ctx.rust_ident(format!("_phantom_{}", idx));
@@ -1921,12 +1913,12 @@ impl CodeGenerator for CompInfo {
                     ::#prefix::cell::UnsafeCell<#ident>
                 > ,
             });
-            generic_params.push(this_generic);
         }
 
-        let generics = if !generic_params.is_empty() {
+        let generics = if !generic_param_names.is_empty() {
+            let generic_param_names = generic_param_names.clone();
             quote! {
-                < #( #generic_params ),* >
+                < #( #generic_param_names ),* >
             }
         } else {
             quote! {}
@@ -2013,8 +2005,28 @@ impl CodeGenerator for CompInfo {
             }
         };
 
+        let mut where_constraints_ts = quote! {};
+        if !where_constraints.is_empty() {
+            for (i, (k, traits)) in where_constraints.into_iter().enumerate() {
+                let prefix = if i == 0 {
+                    quote! { where }
+                } else {
+                    quote! { , }
+                };
+                where_constraints_ts.extend(quote! { #prefix #k });
+                for (j, v) in traits.into_iter().enumerate() {
+                    let sep = if j == 0 {
+                        quote! {:}
+                    } else {
+                        quote! {+}
+                    };
+                    where_constraints_ts.extend(quote! { #sep #v });
+                }
+            }
+        }
+
         tokens.append_all(quote! {
-            #generics {
+            #generics #where_constraints_ts {
                 #( #fields )*
             }
         });
