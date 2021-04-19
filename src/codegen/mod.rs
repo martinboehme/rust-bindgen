@@ -3826,7 +3826,7 @@ impl TryToRustTy for Type {
                 let trait_id = ctx.inner_type_trait_ident(field_name);
                 Ok(quote! {
                     < #ident as #trait_id > :: #dependent_type_ident
-                })
+                }.into())
             }
             TypeKind::ObjCSel => Ok(quote! {
                 objc::runtime::Sel
