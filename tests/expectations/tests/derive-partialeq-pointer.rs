@@ -40,6 +40,7 @@ pub struct c {
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
+#[bindgen_original_name("c::_bindgen_ty_1")]
 pub union c__bindgen_ty_1 {
     pub _address: u8,
 }

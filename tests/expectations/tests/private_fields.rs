@@ -400,6 +400,7 @@ pub struct WithAnonStruct {
 }
 #[repr(C)]
 #[derive(Debug, Default, Copy, Clone)]
+#[bindgen_original_name("WithAnonStruct::_bindgen_ty_1")]
 pub struct WithAnonStruct__bindgen_ty_1 {
     pub a: ::std::os::raw::c_int,
 }
@@ -431,6 +432,7 @@ fn bindgen_test_layout_WithAnonStruct__bindgen_ty_1() {
 }
 #[repr(C)]
 #[derive(Debug, Default, Copy, Clone)]
+#[bindgen_original_name("WithAnonStruct::_bindgen_ty_2")]
 pub struct WithAnonStruct__bindgen_ty_2 {
     pub b: ::std::os::raw::c_int,
 }
@@ -480,6 +482,7 @@ pub struct WithAnonUnion {
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
+#[bindgen_original_name("WithAnonUnion::_bindgen_ty_1")]
 pub union WithAnonUnion__bindgen_ty_1 {
     pub _address: u8,
 }

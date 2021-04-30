@@ -57,6 +57,7 @@ pub struct A {
 }
 #[repr(C)]
 #[derive(Debug, Default, Copy, Hash, PartialEq, Eq)]
+#[bindgen_original_name("A::Segment")]
 pub struct A_Segment {
     pub begin: ::std::os::raw::c_int,
     pub end: ::std::os::raw::c_int,
@@ -105,6 +106,7 @@ impl Clone for A_Segment {
 }
 #[repr(C)]
 #[derive(Debug, Default, Copy, Hash, PartialEq, Eq)]
+#[bindgen_original_name("A::_bindgen_ty_1")]
 pub struct A__bindgen_ty_1 {
     pub f: __BindgenUnionField<::std::os::raw::c_int>,
     pub bindgen_union_field: u32,
@@ -141,6 +143,7 @@ impl Clone for A__bindgen_ty_1 {
 }
 #[repr(C)]
 #[derive(Debug, Default, Copy, Hash, PartialEq, Eq)]
+#[bindgen_original_name("A::_bindgen_ty_2")]
 pub struct A__bindgen_ty_2 {
     pub d: __BindgenUnionField<::std::os::raw::c_int>,
     pub bindgen_union_field: u32,
@@ -217,6 +220,7 @@ pub struct B {
 }
 #[repr(C)]
 #[derive(Debug, Default, Copy, Hash, PartialEq, Eq)]
+#[bindgen_original_name("B::Segment")]
 pub struct B_Segment {
     pub begin: ::std::os::raw::c_int,
     pub end: ::std::os::raw::c_int,
@@ -302,6 +306,7 @@ pub struct C {
 }
 #[repr(C)]
 #[derive(Debug, Default, Copy, Hash, PartialEq)]
+#[bindgen_original_name("C::_bindgen_ty_1")]
 pub struct C__bindgen_ty_1 {
     pub mFunc: __BindgenUnionField<C__bindgen_ty_1__bindgen_ty_1>,
     pub __bindgen_anon_1: __BindgenUnionField<C__bindgen_ty_1__bindgen_ty_2>,
@@ -309,6 +314,7 @@ pub struct C__bindgen_ty_1 {
 }
 #[repr(C)]
 #[derive(Debug, Default, Copy, PartialEq)]
+#[bindgen_original_name("C::_bindgen_ty_1::_bindgen_ty_1")]
 pub struct C__bindgen_ty_1__bindgen_ty_1 {
     pub mX1: f32,
     pub mY1: f32,
@@ -387,6 +393,7 @@ impl Clone for C__bindgen_ty_1__bindgen_ty_1 {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Hash, PartialEq, Eq)]
+#[bindgen_original_name("C::_bindgen_ty_1::_bindgen_ty_2")]
 pub struct C__bindgen_ty_1__bindgen_ty_2 {
     pub mStepSyntax: StepSyntax,
     pub mSteps: ::std::os::raw::c_uint,
@@ -473,6 +480,7 @@ impl Clone for C__bindgen_ty_1 {
 }
 #[repr(C)]
 #[derive(Debug, Default, Copy, Hash, PartialEq, Eq)]
+#[bindgen_original_name("C::Segment")]
 pub struct C_Segment {
     pub begin: ::std::os::raw::c_int,
     pub end: ::std::os::raw::c_int,

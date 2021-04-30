@@ -77,6 +77,7 @@ pub const StyleFoo_Tag_Bazz: StyleFoo_Tag = 0;
 pub type StyleFoo_Tag = u8;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
+#[bindgen_original_name("StyleFoo::Foo_Body")]
 pub struct StyleFoo_Foo_Body<T> {
     pub tag: StyleFoo_Tag,
     pub x: i32,
@@ -91,6 +92,7 @@ impl<T> Default for StyleFoo_Foo_Body<T> {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
+#[bindgen_original_name("StyleFoo::Bar_Body")]
 pub struct StyleFoo_Bar_Body<T> {
     pub tag: StyleFoo_Tag,
     pub _0: T,
@@ -103,6 +105,7 @@ impl<T> Default for StyleFoo_Bar_Body<T> {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
+#[bindgen_original_name("StyleFoo::Baz_Body")]
 pub struct StyleFoo_Baz_Body<T> {
     pub tag: StyleFoo_Tag,
     pub _0: StylePoint<T>,
@@ -115,6 +118,7 @@ impl<T> Default for StyleFoo_Baz_Body<T> {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
+#[bindgen_original_name("StyleFoo::_bindgen_ty_1")]
 pub struct StyleFoo__bindgen_ty_1 {
     pub tag: StyleFoo_Tag,
 }
@@ -137,6 +141,7 @@ pub const StyleBar_Tag_Bar4: StyleBar_Tag = 0;
 pub type StyleBar_Tag = ::std::os::raw::c_int;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
+#[bindgen_original_name("StyleBar::StyleBar1_Body")]
 pub struct StyleBar_StyleBar1_Body<T> {
     pub x: i32,
     pub y: StylePoint<T>,
@@ -150,6 +155,7 @@ impl<T> Default for StyleBar_StyleBar1_Body<T> {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
+#[bindgen_original_name("StyleBar::StyleBar2_Body")]
 pub struct StyleBar_StyleBar2_Body<T> {
     pub _0: T,
     pub _phantom_0: ::std::marker::PhantomData<::std::cell::UnsafeCell<T>>,
@@ -161,6 +167,7 @@ impl<T> Default for StyleBar_StyleBar2_Body<T> {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
+#[bindgen_original_name("StyleBar::StyleBar3_Body")]
 pub struct StyleBar_StyleBar3_Body<T> {
     pub _0: StylePoint<T>,
     pub _phantom_0: ::std::marker::PhantomData<::std::cell::UnsafeCell<T>>,
@@ -172,6 +179,7 @@ impl<T> Default for StyleBar_StyleBar3_Body<T> {
 }
 #[repr(C)]
 #[derive(Debug, Default, Copy, Clone)]
+#[bindgen_original_name("StyleBar::_bindgen_ty_1")]
 pub struct StyleBar__bindgen_ty_1<T> {
     pub bar1: __BindgenUnionField<StyleBar_StyleBar1_Body<T>>,
     pub bar2: __BindgenUnionField<StyleBar_StyleBar2_Body<T>>,

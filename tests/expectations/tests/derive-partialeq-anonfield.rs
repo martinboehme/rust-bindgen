@@ -14,6 +14,7 @@ pub struct rte_mbuf {
 #[repr(C)]
 #[repr(align(1))]
 #[derive(Copy, Clone)]
+#[bindgen_original_name("rte_mbuf::_bindgen_ty_1")]
 pub struct rte_mbuf__bindgen_ty_1 {
     pub bindgen_union_field: [u8; 0usize],
 }

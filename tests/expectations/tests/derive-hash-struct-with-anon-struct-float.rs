@@ -13,6 +13,7 @@ pub struct foo {
 }
 #[repr(C)]
 #[derive(Debug, Default, Copy, Clone, PartialOrd, PartialEq)]
+#[bindgen_original_name("foo::_bindgen_ty_1")]
 pub struct foo__bindgen_ty_1 {
     pub a: f32,
     pub b: f32,

@@ -660,6 +660,7 @@ pub struct rte_eth_vmdq_dcb_conf {
 }
 #[repr(C)]
 #[derive(Debug, Default, Copy, Clone, Hash, PartialEq, Eq)]
+#[bindgen_original_name("rte_eth_vmdq_dcb_conf::_bindgen_ty_1")]
 pub struct rte_eth_vmdq_dcb_conf__bindgen_ty_1 {
     ///< The vlan id of the received frame
     pub vlan_id: u16,
@@ -1017,6 +1018,7 @@ pub struct rte_eth_vmdq_rx_conf {
 }
 #[repr(C)]
 #[derive(Debug, Default, Copy, Clone, Hash, PartialEq, Eq)]
+#[bindgen_original_name("rte_eth_vmdq_rx_conf::_bindgen_ty_1")]
 pub struct rte_eth_vmdq_rx_conf__bindgen_ty_1 {
     ///< The vlan id of the received frame
     pub vlan_id: u16,
@@ -1928,6 +1930,7 @@ pub struct rte_eth_conf {
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
+#[bindgen_original_name("rte_eth_conf::_bindgen_ty_1")]
 pub struct rte_eth_conf__bindgen_ty_1 {
     ///< Port RSS configuration
     pub rss_conf: rte_eth_rss_conf,
@@ -2007,6 +2010,7 @@ impl Default for rte_eth_conf__bindgen_ty_1 {
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
+#[bindgen_original_name("rte_eth_conf::_bindgen_ty_2")]
 pub union rte_eth_conf__bindgen_ty_2 {
     pub vmdq_dcb_tx_conf: rte_eth_vmdq_dcb_tx_conf,
     pub dcb_tx_conf: rte_eth_dcb_tx_conf,

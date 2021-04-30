@@ -12,6 +12,7 @@ pub struct NastyStruct {
     pub __bindgen_anon_1: NastyStruct__bindgen_ty_2,
 }
 #[repr(C)]
+#[bindgen_original_name("NastyStruct::_bindgen_ty_1")]
 pub union NastyStruct__bindgen_ty_1 {
     pub mFoo: *mut ::std::os::raw::c_void,
     pub mDummy: ::std::os::raw::c_ulong,
@@ -22,6 +23,7 @@ impl Default for NastyStruct__bindgen_ty_1 {
     }
 }
 #[repr(C)]
+#[bindgen_original_name("NastyStruct::_bindgen_ty_2")]
 pub union NastyStruct__bindgen_ty_2 {
     pub wat: ::std::os::raw::c_short,
     pub wut: *mut ::std::os::raw::c_int,

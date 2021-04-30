@@ -192,6 +192,7 @@ pub union jsval_layout {
 #[repr(C)]
 #[repr(align(8))]
 #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+#[bindgen_original_name("jsval_layout::_bindgen_ty_1")]
 pub struct jsval_layout__bindgen_ty_1 {
     pub _bitfield_align_1: [u64; 0],
     pub _bitfield_1: __BindgenBitfieldUnit<[u8; 8usize]>,
@@ -261,11 +262,13 @@ impl jsval_layout__bindgen_ty_1 {
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
+#[bindgen_original_name("jsval_layout::_bindgen_ty_2")]
 pub struct jsval_layout__bindgen_ty_2 {
     pub payload: jsval_layout__bindgen_ty_2__bindgen_ty_1,
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
+#[bindgen_original_name("jsval_layout::_bindgen_ty_2::_bindgen_ty_1")]
 pub union jsval_layout__bindgen_ty_2__bindgen_ty_1 {
     pub i32_: i32,
     pub u32_: u32,

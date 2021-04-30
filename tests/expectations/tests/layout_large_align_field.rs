@@ -194,6 +194,7 @@ pub struct ip_frag_pkt {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
+#[bindgen_original_name("ip_frag_pkt::_bindgen_ty_1")]
 pub struct ip_frag_pkt__bindgen_ty_1 {
     pub tqe_next: *mut ip_frag_pkt,
     pub tqe_prev: *mut *mut ip_frag_pkt,

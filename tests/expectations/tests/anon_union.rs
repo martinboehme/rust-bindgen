@@ -23,15 +23,18 @@ pub enum TErrorResult_UnionState {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
+#[bindgen_original_name("TErrorResult::Message")]
 pub struct TErrorResult_Message {
     _unused: [u8; 0],
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
+#[bindgen_original_name("TErrorResult::DOMExceptionInfo")]
 pub struct TErrorResult_DOMExceptionInfo {
     _unused: [u8; 0],
 }
 #[repr(C)]
+#[bindgen_original_name("TErrorResult::_bindgen_ty_1")]
 pub union TErrorResult__bindgen_ty_1 {
     pub mMessage: *mut TErrorResult_Message,
     pub mDOMExceptionInfo: *mut TErrorResult_DOMExceptionInfo,

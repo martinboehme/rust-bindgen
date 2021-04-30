@@ -16,6 +16,7 @@ pub mod root {
     }
     #[repr(C)]
     #[derive(Debug, Default, Copy, Clone)]
+    #[bindgen_original_name("jsval_layout::_bindgen_ty_1")]
     pub struct jsval_layout__bindgen_ty_1 {
         pub _address: u8,
     }

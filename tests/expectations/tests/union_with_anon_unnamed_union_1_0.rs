@@ -57,6 +57,7 @@ pub struct foo {
 }
 #[repr(C)]
 #[derive(Debug, Default, Copy, Hash, PartialEq, Eq)]
+#[bindgen_original_name("foo::_bindgen_ty_1")]
 pub struct foo__bindgen_ty_1 {
     pub b: __BindgenUnionField<::std::os::raw::c_ushort>,
     pub c: __BindgenUnionField<::std::os::raw::c_uchar>,

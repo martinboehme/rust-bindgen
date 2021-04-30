@@ -12,6 +12,7 @@ pub union foo {
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
+#[bindgen_original_name("foo::_bindgen_ty_1")]
 pub union foo__bindgen_ty_1 {
     pub a: ::std::os::raw::c_uint,
     pub b: ::std::os::raw::c_ushort,

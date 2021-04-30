@@ -13,6 +13,7 @@ pub union pixel {
 }
 #[repr(C)]
 #[derive(Debug, Default, Copy, Clone, Hash, PartialEq, Eq)]
+#[bindgen_original_name("pixel::_bindgen_ty_1")]
 pub struct pixel__bindgen_ty_1 {
     pub r: ::std::os::raw::c_uchar,
     pub g: ::std::os::raw::c_uchar,

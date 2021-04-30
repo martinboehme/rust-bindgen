@@ -13,6 +13,7 @@ pub struct foo {
 }
 #[repr(C)]
 #[derive(Debug, Default, Copy, Clone, Hash, PartialEq, Eq)]
+#[bindgen_original_name("foo::_bindgen_ty_1")]
 pub struct foo__bindgen_ty_1 {
     pub a: ::std::os::raw::c_int,
     pub b: ::std::os::raw::c_int,
@@ -56,6 +57,7 @@ fn bindgen_test_layout_foo__bindgen_ty_1() {
 }
 #[repr(C)]
 #[derive(Debug, Default, Copy, Clone, Hash, PartialEq, Eq)]
+#[bindgen_original_name("foo::_bindgen_ty_2")]
 pub struct foo__bindgen_ty_2 {
     pub a: ::std::os::raw::c_int,
     pub b: ::std::os::raw::c_int,

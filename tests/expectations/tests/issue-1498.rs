@@ -25,6 +25,7 @@ pub struct rte_memseg {
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
+#[bindgen_original_name("rte_memseg::_bindgen_ty_1")]
 pub union rte_memseg__bindgen_ty_1 {
     ///< Start virtual address.
     pub addr: *mut ::std::os::raw::c_void,

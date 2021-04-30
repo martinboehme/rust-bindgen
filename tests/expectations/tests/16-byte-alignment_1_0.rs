@@ -57,6 +57,7 @@ pub struct rte_ipv4_tuple {
 }
 #[repr(C)]
 #[derive(Debug, Default, Copy, Hash, PartialEq, Eq)]
+#[bindgen_original_name("rte_ipv4_tuple::_bindgen_ty_1")]
 pub struct rte_ipv4_tuple__bindgen_ty_1 {
     pub __bindgen_anon_1:
         __BindgenUnionField<rte_ipv4_tuple__bindgen_ty_1__bindgen_ty_1>,
@@ -65,6 +66,7 @@ pub struct rte_ipv4_tuple__bindgen_ty_1 {
 }
 #[repr(C)]
 #[derive(Debug, Default, Copy, Hash, PartialEq, Eq)]
+#[bindgen_original_name("rte_ipv4_tuple::_bindgen_ty_1::_bindgen_ty_1")]
 pub struct rte_ipv4_tuple__bindgen_ty_1__bindgen_ty_1 {
     pub dport: u16,
     pub sport: u16,
@@ -205,6 +207,7 @@ pub struct rte_ipv6_tuple {
 }
 #[repr(C)]
 #[derive(Debug, Default, Copy, Hash, PartialEq, Eq)]
+#[bindgen_original_name("rte_ipv6_tuple::_bindgen_ty_1")]
 pub struct rte_ipv6_tuple__bindgen_ty_1 {
     pub __bindgen_anon_1:
         __BindgenUnionField<rte_ipv6_tuple__bindgen_ty_1__bindgen_ty_1>,
@@ -213,6 +216,7 @@ pub struct rte_ipv6_tuple__bindgen_ty_1 {
 }
 #[repr(C)]
 #[derive(Debug, Default, Copy, Hash, PartialEq, Eq)]
+#[bindgen_original_name("rte_ipv6_tuple::_bindgen_ty_1::_bindgen_ty_1")]
 pub struct rte_ipv6_tuple__bindgen_ty_1__bindgen_ty_1 {
     pub dport: u16,
     pub sport: u16,

@@ -14,6 +14,7 @@ pub union color {
 }
 #[repr(C)]
 #[derive(Debug, Default, Copy, Clone)]
+#[bindgen_original_name("color::_bindgen_ty_1")]
 pub struct color__bindgen_ty_1 {
     pub r: ::std::os::raw::c_uchar,
     pub g: ::std::os::raw::c_uchar,
@@ -73,6 +74,7 @@ fn bindgen_test_layout_color__bindgen_ty_1() {
 }
 #[repr(C)]
 #[derive(Debug, Default, Copy, Clone)]
+#[bindgen_original_name("color::_bindgen_ty_2")]
 pub struct color__bindgen_ty_2 {
     pub y: ::std::os::raw::c_uchar,
     pub u: ::std::os::raw::c_uchar,

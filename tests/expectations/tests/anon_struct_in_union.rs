@@ -12,11 +12,13 @@ pub struct s {
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
+#[bindgen_original_name("s::_bindgen_ty_1")]
 pub union s__bindgen_ty_1 {
     pub field: s__bindgen_ty_1_inner,
 }
 #[repr(C)]
 #[derive(Debug, Default, Copy, Clone, Hash, PartialEq, Eq)]
+#[bindgen_original_name("s::_bindgen_ty_1::inner")]
 pub struct s__bindgen_ty_1_inner {
     pub b: ::std::os::raw::c_int,
 }

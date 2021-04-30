@@ -294,6 +294,7 @@ pub struct malloc_heap {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+#[bindgen_original_name("malloc_heap::_bindgen_ty_1")]
 pub struct malloc_heap__bindgen_ty_1 {
     pub lh_first: *mut malloc_elem,
 }

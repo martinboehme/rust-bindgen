@@ -13,12 +13,14 @@ pub union foo {
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
+#[bindgen_original_name("foo::_bindgen_ty_1")]
 pub struct foo__bindgen_ty_1 {
     pub __bindgen_anon_1: foo__bindgen_ty_1__bindgen_ty_1,
     pub __bindgen_anon_2: foo__bindgen_ty_1__bindgen_ty_2,
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
+#[bindgen_original_name("foo::_bindgen_ty_1::_bindgen_ty_1")]
 pub union foo__bindgen_ty_1__bindgen_ty_1 {
     pub b1: ::std::os::raw::c_ushort,
     pub b2: ::std::os::raw::c_ushort,
@@ -69,6 +71,7 @@ impl Default for foo__bindgen_ty_1__bindgen_ty_1 {
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
+#[bindgen_original_name("foo::_bindgen_ty_1::_bindgen_ty_2")]
 pub union foo__bindgen_ty_1__bindgen_ty_2 {
     pub c1: ::std::os::raw::c_ushort,
     pub c2: ::std::os::raw::c_ushort,

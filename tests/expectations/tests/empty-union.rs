@@ -7,6 +7,7 @@
 
 #[repr(C)]
 #[derive(Copy, Clone)]
+#[bindgen_original_name("a::_bindgen_ty_1")]
 pub union a__bindgen_ty_1 {
     pub _address: u8,
 }

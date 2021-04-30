@@ -14,12 +14,14 @@ pub struct rte_ipv4_tuple {
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
+#[bindgen_original_name("rte_ipv4_tuple::_bindgen_ty_1")]
 pub union rte_ipv4_tuple__bindgen_ty_1 {
     pub __bindgen_anon_1: rte_ipv4_tuple__bindgen_ty_1__bindgen_ty_1,
     pub sctp_tag: u32,
 }
 #[repr(C)]
 #[derive(Debug, Default, Copy, Clone, Hash, PartialEq, Eq)]
+#[bindgen_original_name("rte_ipv4_tuple::_bindgen_ty_1::_bindgen_ty_1")]
 pub struct rte_ipv4_tuple__bindgen_ty_1__bindgen_ty_1 {
     pub dport: u16,
     pub sport: u16,
@@ -155,12 +157,14 @@ pub struct rte_ipv6_tuple {
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
+#[bindgen_original_name("rte_ipv6_tuple::_bindgen_ty_1")]
 pub union rte_ipv6_tuple__bindgen_ty_1 {
     pub __bindgen_anon_1: rte_ipv6_tuple__bindgen_ty_1__bindgen_ty_1,
     pub sctp_tag: u32,
 }
 #[repr(C)]
 #[derive(Debug, Default, Copy, Clone, Hash, PartialEq, Eq)]
+#[bindgen_original_name("rte_ipv6_tuple::_bindgen_ty_1::_bindgen_ty_1")]
 pub struct rte_ipv6_tuple__bindgen_ty_1__bindgen_ty_1 {
     pub dport: u16,
     pub sport: u16,

@@ -55,12 +55,14 @@ pub struct s {
 }
 #[repr(C)]
 #[derive(Debug, Default, Copy, Hash, PartialEq, Eq)]
+#[bindgen_original_name("s::_bindgen_ty_1")]
 pub struct s__bindgen_ty_1 {
     pub field: __BindgenUnionField<s__bindgen_ty_1_inner>,
     pub bindgen_union_field: u32,
 }
 #[repr(C)]
 #[derive(Debug, Default, Copy, Hash, PartialEq, Eq)]
+#[bindgen_original_name("s::_bindgen_ty_1::inner")]
 pub struct s__bindgen_ty_1_inner {
     pub b: ::std::os::raw::c_int,
 }

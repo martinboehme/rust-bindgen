@@ -57,6 +57,7 @@ pub struct NastyStruct {
 }
 #[repr(C)]
 #[derive(Debug, Default, Copy, Clone, Hash, PartialEq, Eq)]
+#[bindgen_original_name("NastyStruct::_bindgen_ty_1")]
 pub struct NastyStruct__bindgen_ty_1 {
     pub mFoo: __BindgenUnionField<*mut ::std::os::raw::c_void>,
     pub mDummy: __BindgenUnionField<::std::os::raw::c_ulong>,
@@ -64,6 +65,7 @@ pub struct NastyStruct__bindgen_ty_1 {
 }
 #[repr(C)]
 #[derive(Debug, Default, Copy, Clone, Hash, PartialEq, Eq)]
+#[bindgen_original_name("NastyStruct::_bindgen_ty_2")]
 pub struct NastyStruct__bindgen_ty_2 {
     pub wat: __BindgenUnionField<::std::os::raw::c_short>,
     pub wut: __BindgenUnionField<*mut ::std::os::raw::c_int>,

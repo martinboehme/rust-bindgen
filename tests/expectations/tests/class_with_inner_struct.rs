@@ -14,6 +14,7 @@ pub struct A {
 }
 #[repr(C)]
 #[derive(Debug, Default, Copy, Clone, Hash, PartialEq, Eq)]
+#[bindgen_original_name("A::Segment")]
 pub struct A_Segment {
     pub begin: ::std::os::raw::c_int,
     pub end: ::std::os::raw::c_int,
@@ -57,6 +58,7 @@ fn bindgen_test_layout_A_Segment() {
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
+#[bindgen_original_name("A::_bindgen_ty_1")]
 pub union A__bindgen_ty_1 {
     pub f: ::std::os::raw::c_int,
 }
@@ -92,6 +94,7 @@ impl Default for A__bindgen_ty_1 {
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
+#[bindgen_original_name("A::_bindgen_ty_2")]
 pub union A__bindgen_ty_2 {
     pub d: ::std::os::raw::c_int,
 }
@@ -167,6 +170,7 @@ pub struct B {
 }
 #[repr(C)]
 #[derive(Debug, Default, Copy, Clone, Hash, PartialEq, Eq)]
+#[bindgen_original_name("B::Segment")]
 pub struct B_Segment {
     pub begin: ::std::os::raw::c_int,
     pub end: ::std::os::raw::c_int,
@@ -242,12 +246,14 @@ pub struct C {
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
+#[bindgen_original_name("C::_bindgen_ty_1")]
 pub union C__bindgen_ty_1 {
     pub mFunc: C__bindgen_ty_1__bindgen_ty_1,
     pub __bindgen_anon_1: C__bindgen_ty_1__bindgen_ty_2,
 }
 #[repr(C)]
 #[derive(Debug, Default, Copy, Clone, PartialEq)]
+#[bindgen_original_name("C::_bindgen_ty_1::_bindgen_ty_1")]
 pub struct C__bindgen_ty_1__bindgen_ty_1 {
     pub mX1: f32,
     pub mY1: f32,
@@ -321,6 +327,7 @@ fn bindgen_test_layout_C__bindgen_ty_1__bindgen_ty_1() {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+#[bindgen_original_name("C::_bindgen_ty_1::_bindgen_ty_2")]
 pub struct C__bindgen_ty_1__bindgen_ty_2 {
     pub mStepSyntax: StepSyntax,
     pub mSteps: ::std::os::raw::c_uint,
@@ -402,6 +409,7 @@ impl Default for C__bindgen_ty_1 {
 }
 #[repr(C)]
 #[derive(Debug, Default, Copy, Clone, Hash, PartialEq, Eq)]
+#[bindgen_original_name("C::Segment")]
 pub struct C_Segment {
     pub begin: ::std::os::raw::c_int,
     pub end: ::std::os::raw::c_int,
